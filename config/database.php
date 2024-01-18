@@ -39,7 +39,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => '127.0.0.1',
             'port' => 8889,
-            'database' => 'oraumum',
+            'database' => 'sendiri1',
             'username' => 'root',
             'password' => 'root',
             'unix_socket' => env('DB_SOCKET', ''),
@@ -58,7 +58,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => '127.0.0.1',
             'port' => 8889,
-            'database' => 'umum',
+            'database' => 'gabungan',
             'username' => 'root',
             'password' => 'root',
             'unix_socket' => env('DB_SOCKET', ''),
@@ -163,7 +163,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

@@ -236,6 +236,7 @@ use Illuminate\Database\Eloquent\Model;
 class Config extends Model
 {
 	protected $table = 'config';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'kode_pos' => 'int',
