@@ -3,12 +3,20 @@
 namespace App\Console\Commands;
 
 use App\Models\Asal\Config as AsalConfig;
+use App\Models\Asal\TwebPenduduk;
+use App\Models\Asal\TwebPendudukMandiri;
+use App\Models\Asal\TwebPendudukUmur;
+use App\Models\Asal\TwebRtm;
 use App\Models\Asal\TwebSuratFormat;
 use App\Models\Asal\TwebWilClusterdesa;
 use App\Models\Asal\User;
 use App\Models\Asal\UserGrup;
 use App\Models\Asal\Widget;
 use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
+use App\Models\Tujuan\TwebPendudukMandiri as TujuanTwebPendudukMandiri;
+use App\Models\Tujuan\TwebPendudukUmur as TujuanTwebPendudukUmur;
+use App\Models\Tujuan\TwebRtm as TujuanTwebRtm;
 use App\Models\Tujuan\TwebSuratFormat as TujuanTwebSuratFormat;
 use App\Models\Tujuan\TwebWilClusterdesa as TujuanTwebWilClusterdesa;
 use App\Models\Tujuan\User as TujuanUser;
@@ -102,6 +110,46 @@ class CobaCommand extends Command
             $cek = TujuanTwebSuratFormat::where('config_id', $setConfigId)->first();
             if (!$cek) {
                 TujuanTwebSuratFormat::create($item->toArray());
+            }
+        }
+
+        $this->info('pindah table tweb_rtm');
+        $a = TwebRtm::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanTwebRtm::where('config_id', $setConfigId)->first();
+            if (!$cek) {
+                TujuanTwebRtm::create($item->toArray());
+            }
+        }
+
+        $this->info('pindah table tweb_penduduk_umur');
+        $a = TwebPendudukUmur::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanTwebPendudukUmur::where('config_id', $setConfigId)->first();
+            if (!$cek) {
+                TujuanTwebPendudukUmur::create($item->toArray());
+            }
+        }
+
+        $this->info('pindah table tweb_penduduk');
+        $a = TwebPenduduk::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanTwebPenduduk::where('config_id', $setConfigId)->first();
+            if (!$cek) {
+                TujuanTwebPenduduk::create($item->toArray());
+            }
+        }
+
+        $this->info('pindah table tweb_penduduk_mandiri');
+        $a = TwebPendudukMandiri::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanTwebPendudukMandiri::where('config_id', $setConfigId)->first();
+            if (!$cek) {
+                TujuanTwebPendudukMandiri::create($item->toArray());
             }
         }
     }
