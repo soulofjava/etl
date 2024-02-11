@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Asal\Config;
 use App\Models\Asal\GisSimbol;
 use App\Models\Asal\GrupAkse;
+use App\Models\Asal\SettingModul;
 use App\Models\Asal\User;
 use App\Models\Asal\UserGrup;
 use App\Models\Tujuan\User as TujuanUser;
@@ -13,6 +14,7 @@ use App\Models\Tujuan\UserGrup as TujuanUserGrup;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\GisSimbol as TujuanGisSimbol;
 use App\Models\Tujuan\GrupAkse as TujuanGrupAkse;
+use App\Models\Tujuan\SettingModul as TujuanSettingModul;
 
 class GCommand extends Command
 {
@@ -63,23 +65,39 @@ class GCommand extends Command
             }
         }
 
+        $this->info('pindah table UserGrup');
+        $a = UserGrup::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanUserGrup::where('config_id', $setConfigId)->where('slug', $item->slug)->first();
+            if (!$cek) {
+                TujuanUserGrup::create($item->toArray());
+            }
+        }
+
+        $this->info('pindah table SettingModul');
+        $a = SettingModul::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanSettingModul::where('config_id', $setConfigId)->where('slug', $item->slug)->first();
+            if (!$cek) {
+                TujuanSettingModul::create($item->toArray());
+            }
+        }
+
         $this->info('pindah table GrupAkses');
         $a = GrupAkse::all();
 
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
 
-            // Check if the corresponding id_grup exists in user_grup table
-            $userGrupExists = UserGrup::where('id', $item->id_grup)->exists();
+            // Check if a corresponding record with the same id_grup exists
+            $cek = TujuanGrupAkse::where('config_id', $setConfigId)
+                ->where('id_modul', $item->id_modul)
+                ->first();
 
-            if ($userGrupExists) {
-                $cek = TujuanGrupAkse::where('config_id', $setConfigId)->first();
-
-                if (!$cek) {
-                    TujuanGrupAkse::create($item->toArray());
-                }
-            } else {
-                $this->info("User Grup with id {$item->id_grup} does not exist.");
+            if (!$cek) {
+                TujuanGrupAkse::create($item->toArray());
             }
         }
     }

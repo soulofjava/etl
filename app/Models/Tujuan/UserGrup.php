@@ -31,7 +31,8 @@ use Illuminate\Database\Eloquent\Model;
 class UserGrup extends Model
 {
 	protected $table = 'user_grup';
-
+	public $timestamps = false;
+	protected $connection = "tujuan";
 	protected $casts = [
 		'config_id' => 'int',
 		'jenis' => 'int',
