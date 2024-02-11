@@ -43,7 +43,7 @@ use App\Models\Tujuan\Area as TujuanArea;
 use App\Models\Tujuan\Artikel as TujuanArtikel;
 
 
-class MoveCommand extends Command
+class ACommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -161,7 +161,7 @@ class MoveCommand extends Command
         $a = AnalisisRefSubjek::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisRefSubjek::where('id', $item->id)->first();
+            $cek = TujuanAnalisisRefState::where('id', $item->id)->first();
             if (!$cek) {
                 TujuanAnalisisRefSubjek::create($item->toArray());
             }
