@@ -32,9 +32,14 @@ use Illuminate\Database\Eloquent\Model;
 class AnjunganMenu extends Model
 {
 	protected $table = 'anjungan_menu';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
+		'nama' => 'string',
+		'icon' => 'string',
+		'link' => 'string',
 		'link_tipe' => 'int',
 		'urut' => 'int',
 		'status' => 'int',

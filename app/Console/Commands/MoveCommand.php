@@ -19,6 +19,28 @@ use App\Models\Asal\AnalisisPartisipasi;
 use App\Models\Tujuan\AnalisisPartisipasi as TujuanAnalisisPartisipasi;
 use App\Models\Asal\AnalisisPeriode;
 use App\Models\Tujuan\AnalisisPeriode as TujuanAnalisisPeriode;
+use App\Models\Asal\AnalisisRefState;
+use App\Models\Tujuan\AnalisisRefState as TujuanAnalisisRefState;
+use App\Models\Asal\AnalisisRefSubjek;
+use App\Models\Tujuan\AnalisisRefSubjek as TujuanAnalisisRefSubjek;
+use App\Models\Asal\AnalisisRespon;
+use App\Models\Asal\AnalisisResponBukti;
+use App\Models\Asal\AnalisisResponHasil;
+use App\Models\Asal\AnalisisTipeIndikator;
+use App\Models\Asal\AnggotaGrupKontak;
+use App\Models\Asal\Anjungan;
+use App\Models\Asal\AnjunganMenu;
+use App\Models\Asal\Area;
+use App\Models\Asal\Artikel;
+use App\Models\Tujuan\AnalisisRespon as TujuanAnalisisRespon;
+use App\Models\Tujuan\AnalisisResponBukti as TujuanAnalisisResponBukti;
+use App\Models\Tujuan\AnalisisResponHasil as TujuanAnalisisResponHasil;
+use App\Models\Tujuan\AnalisisTipeIndikator as TujuanAnalisisTipeIndikator;
+use App\Models\Tujuan\AnggotaGrupKontak as TujuanAnggotaGrupKontak;
+use App\Models\Tujuan\Anjungan as TujuanAnjungan;
+use App\Models\Tujuan\AnjunganMenu as TujuanAnjunganMenu;
+use App\Models\Tujuan\Area as TujuanArea;
+use App\Models\Tujuan\Artikel as TujuanArtikel;
 
 class MoveCommand extends Command
 {
@@ -123,6 +145,109 @@ class MoveCommand extends Command
             $cek = TujuanAnalisisPeriode::where('config_id', $setConfigId)->where('id_master', $item->id_master)->first();
             if (!$cek) {
                 TujuanAnalisisPeriode::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnalisisRefState');
+        $a = AnalisisRefState::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnalisisRefState::where('id', $item->id)->first();
+            if (!$cek) {
+                TujuanAnalisisRefState::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnalisisRefSubjek');
+        $a = AnalisisRefSubjek::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnalisisRefSubjek::where('id', $item->id)->first();
+            if (!$cek) {
+                TujuanAnalisisRefSubjek::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnalisisRespon');
+        $a = AnalisisRespon::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnalisisRespon::where('config_id', $setConfigId)->first();
+            //masih ambigu mau berpatokan dari id apa ?
+            if (!$cek) {
+                TujuanAnalisisRespon::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnalisisResponBukti');
+        $a = AnalisisResponBukti::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnalisisResponBukti::where('config_id', $setConfigId)->first();
+            //masih ambigu mau berpatokan dari id apa ?
+            if (!$cek) {
+                TujuanAnalisisResponBukti::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnalisisResponHasil');
+        $a = AnalisisResponHasil::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnalisisResponHasil::where('config_id', $setConfigId)->first();
+            //masih ambigu mau berpatokan dari id apa ?
+            if (!$cek) {
+                TujuanAnalisisResponHasil::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnalisisTipeIndikator');
+        $a = AnalisisTipeIndikator::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnalisisTipeIndikator::where('id', $item->id)->first();
+            if (!$cek) {
+                TujuanAnalisisTipeIndikator::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnggotaGrupKontak');
+        $a = AnggotaGrupKontak::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnggotaGrupKontak::where('config_id', $setConfigId)->first();
+            //masih ambigu mau berpatokan dari id apa ?
+            if (!$cek) {
+                TujuanAnggotaGrupKontak::create($item->toArray());
+            }
+        }
+        $this->info('pindah table Anjungan');
+        $a = Anjungan::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnjungan::where('config_id', $setConfigId)->where('created_at', $item->crated_at)->first();
+            if (!$cek) {
+                TujuanAnjungan::create($item->toArray());
+            }
+        }
+        $this->info('pindah table AnjunganMenu');
+        $a = AnjunganMenu::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanAnjunganMenu::where('config_id', $setConfigId)->where('urut', $item->urut)->first();
+            if (!$cek) {
+                TujuanAnjunganMenu::create($item->toArray());
+            }
+        }
+        $this->info('pindah table Area');
+        $a = Area::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanArea::where('config_id', $setConfigId)->where('id_cluster', $item->id_cluster)->first();
+            if (!$cek) {
+                TujuanArea::create($item->toArray());
+            }
+        }
+        $this->info('pindah table Artikel');
+        $a = Artikel::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanArtikel::where('config_id', $setConfigId)->where('slug', $item->slug)->first();
+            if (!$cek) {
+                TujuanArtikel::create($item->toArray());
             }
         }
     }

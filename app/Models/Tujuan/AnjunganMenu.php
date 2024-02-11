@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
 class AnjunganMenu extends Model
 {
 	protected $table = 'anjungan_menu';
+	public $timestamps = false;
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',

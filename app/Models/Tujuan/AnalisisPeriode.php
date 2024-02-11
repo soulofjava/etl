@@ -36,7 +36,8 @@ class AnalisisPeriode extends Model
 		'id_master' => 'int',
 		'id_state' => 'int',
 		'aktif' => 'bool',
-		'tahun_pelaksanaan' => 'datetime'
+		'tahun_pelaksanaan' => 'string'
+		// 'tahun_pelaksanaan' => 'datetime' truncate data tidak sesuai database "2018" mwnjadi "1970-01-01T00:32:50.000000Z" dirubah string 
 	];
 
 	protected $fillable = [

@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
 class AnggotaGrupKontak extends Model
 {
 	protected $table = 'anggota_grup_kontak';
+	public $timestamps = false;
+	protected $connection = "asal";
 	protected $primaryKey = 'id_grup_kontak';
 
 	protected $casts = [

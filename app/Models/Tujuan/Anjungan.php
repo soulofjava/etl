@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\Model;
 class Anjungan extends Model
 {
 	protected $table = 'anjungan';
+	public $timestamps = false;
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',
