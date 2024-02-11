@@ -32,6 +32,8 @@ use Illuminate\Database\Eloquent\Model;
 class BukuTamu extends Model
 {
 	protected $table = 'buku_tamu';
+	public $timestamps = false;
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',

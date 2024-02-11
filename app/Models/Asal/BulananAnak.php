@@ -46,6 +46,8 @@ class BulananAnak extends Model
 {
 	protected $table = 'bulanan_anak';
 	protected $primaryKey = 'id_bulanan_anak';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

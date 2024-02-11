@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
 class BukuKepuasan extends Model
 {
 	protected $table = 'buku_kepuasan';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

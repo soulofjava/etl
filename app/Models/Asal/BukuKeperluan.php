@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
 class BukuKeperluan extends Model
 {
 	protected $table = 'buku_keperluan';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
