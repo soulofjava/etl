@@ -29,6 +29,7 @@ class Pesan extends Model
 {
 	protected $table = 'pesan';
 	public $incrementing = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'id' => 'int',
@@ -48,5 +49,10 @@ class Pesan extends Model
 	public function config()
 	{
 		return $this->belongsTo(Config::class);
+	}
+
+	public function pesan_detail()
+	{
+		return $this->hasOne(PesanDetail::class, 'pesan_id', 'id');
 	}
 }

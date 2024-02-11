@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProgramPesertum extends Model
 {
 	protected $table = 'program_peserta';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

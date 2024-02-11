@@ -31,6 +31,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserGrup extends Model
 {
 	protected $table = 'user_grup';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

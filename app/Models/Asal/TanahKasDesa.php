@@ -50,6 +50,7 @@ use Illuminate\Database\Eloquent\Model;
 class TanahKasDesa extends Model
 {
 	protected $table = 'tanah_kas_desa';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

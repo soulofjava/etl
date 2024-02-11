@@ -50,6 +50,7 @@ use Illuminate\Database\Eloquent\Model;
 class TwebSuratFormat extends Model
 {
 	protected $table = 'tweb_surat_format';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

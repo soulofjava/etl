@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 class TeksBerjalan extends Model
 {
 	protected $table = 'teks_berjalan';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

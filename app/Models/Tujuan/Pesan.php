@@ -29,6 +29,7 @@ class Pesan extends Model
 {
 	protected $table = 'pesan';
 	public $incrementing = false;
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'id' => 'int',
@@ -38,6 +39,7 @@ class Pesan extends Model
 	];
 
 	protected $fillable = [
+		'id',
 		'config_id',
 		'judul',
 		'jenis',

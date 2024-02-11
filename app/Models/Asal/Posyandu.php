@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
 class Posyandu extends Model
 {
 	protected $table = 'posyandu';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
@@ -35,13 +36,7 @@ class Posyandu extends Model
 		'updated_by' => 'int'
 	];
 
-	protected $fillable = [
-		'config_id',
-		'nama',
-		'alamat',
-		'created_by',
-		'updated_by'
-	];
+    protected $guarded = [];
 
 	public function config()
 	{

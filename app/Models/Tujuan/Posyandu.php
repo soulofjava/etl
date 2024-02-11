@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
 class Posyandu extends Model
 {
 	protected $table = 'posyandu';
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',
