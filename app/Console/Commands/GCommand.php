@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\Asal\Config;
 use App\Models\Asal\GisSimbol;
 use App\Models\Asal\GrupAkse;
+use App\Models\Asal\KehadiranJamKerja;
 use App\Models\Asal\SettingModul;
 use App\Models\Asal\User;
 use App\Models\Asal\UserGrup;
@@ -14,6 +15,7 @@ use App\Models\Tujuan\UserGrup as TujuanUserGrup;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\GisSimbol as TujuanGisSimbol;
 use App\Models\Tujuan\GrupAkse as TujuanGrupAkse;
+use App\Models\Tujuan\KehadiranJamKerja as TujuanKehadiranJamKerja;
 use App\Models\Tujuan\SettingModul as TujuanSettingModul;
 
 class GCommand extends Command
@@ -85,19 +87,28 @@ class GCommand extends Command
             }
         }
 
-        $this->info('pindah table GrupAkses');
-        $a = GrupAkse::all();
+        // $this->info('pindah table GrupAkses');
+        // $a = GrupAkse::all();
 
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+
+        //     $cek = TujuanGrupAkse::where('config_id', $setConfigId)
+        //         ->where('id_modul', $item->id_modul)
+        //         ->first();
+
+        //     if (!$cek) {
+        //         TujuanGrupAkse::create($item->toArray());
+        //     }
+        // }
+
+        $this->info('pindah table KehadiranJamKerja');
+        $a = KehadiranJamKerja::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-
-            // Check if a corresponding record with the same id_grup exists
-            $cek = TujuanGrupAkse::where('config_id', $setConfigId)
-                ->where('id_modul', $item->id_modul)
-                ->first();
-
+            $cek = TujuanKehadiranJamKerja::where('config_id', $setConfigId)->where('nama_hari', $item->nama_hari)->first();
             if (!$cek) {
-                TujuanGrupAkse::create($item->toArray());
+                TujuanKehadiranJamKerja::create($item->toArray());
             }
         }
     }
