@@ -42,6 +42,7 @@ use App\Models\Tujuan\AnjunganMenu as TujuanAnjunganMenu;
 use App\Models\Tujuan\Area as TujuanArea;
 use App\Models\Tujuan\Artikel as TujuanArtikel;
 
+
 class MoveCommand extends Command
 {
     /**
@@ -49,7 +50,7 @@ class MoveCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'app:move-command';
+    protected $signature = 'app:a-command';
 
     /**
      * The console command description.
