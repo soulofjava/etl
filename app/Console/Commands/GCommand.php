@@ -62,32 +62,24 @@ class GCommand extends Command
                 TujuanGisSimbol::create($item->toArray());
             }
         }
-        $this->info('pindah table user_grup');
-        $a = UserGrup::all();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            $cek = TujuanUserGrup::where('config_id', $setConfigId)->first();
-            if (!$cek) {
-                TujuanUserGrup::create($item->toArray());
-            }
-        }
 
-        $this->info('pindah table user');
-        $a = User::all();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            $cek = TujuanUser::where('config_id', $setConfigId)->first();
-            if (!$cek) {
-                TujuanUser::create($item->toArray());
-            }
-        }
         $this->info('pindah table GrupAkses');
         $a = GrupAkse::all();
+
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanGrupAkse::where('config_id', $setConfigId)->first();
-            if (!$cek) {
-                TujuanGrupAkse::create($item->toArray());
+
+            // Check if the corresponding id_grup exists in user_grup table
+            $userGrupExists = UserGrup::where('id', $item->id_grup)->exists();
+
+            if ($userGrupExists) {
+                $cek = TujuanGrupAkse::where('config_id', $setConfigId)->first();
+
+                if (!$cek) {
+                    TujuanGrupAkse::create($item->toArray());
+                }
+            } else {
+                $this->info("User Grup with id {$item->id_grup} does not exist.");
             }
         }
     }
