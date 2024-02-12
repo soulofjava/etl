@@ -150,97 +150,73 @@ class ACommand extends Command
         }
         $this->info('pindah table AnalisisRefState');
         $a = AnalisisRefState::all();
+        TujuanAnalisisRefState::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisRefState::where('id', $item->id)->first();
-            if (!$cek) {
-                TujuanAnalisisRefState::create($item->toArray());
-            }
+            TujuanAnalisisRefState::create($item->toArray());
         }
         $this->info('pindah table AnalisisRefSubjek');
         $a = AnalisisRefSubjek::all();
+        TujuanAnalisisRefSubjek::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisRefState::where('id', $item->id)->first();
-            if (!$cek) {
-                TujuanAnalisisRefSubjek::create($item->toArray());
-            }
+            TujuanAnalisisRefSubjek::create($item->toArray());
         }
         $this->info('pindah table AnalisisRespon');
         $a = AnalisisRespon::all();
+        TujuanAnalisisRespon::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisRespon::where('config_id', $setConfigId)->first();
-            //masih ambigu mau berpatokan dari id apa ?
-            if (!$cek) {
-                TujuanAnalisisRespon::create($item->toArray());
-            }
+            TujuanAnalisisRespon::create($item->toArray());
         }
         $this->info('pindah table AnalisisResponBukti');
         $a = AnalisisResponBukti::all();
+        TujuanAnalisisResponBukti::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisResponBukti::where('config_id', $setConfigId)->first();
-            //masih ambigu mau berpatokan dari id apa ?
-            if (!$cek) {
-                TujuanAnalisisResponBukti::create($item->toArray());
-            }
+            TujuanAnalisisResponBukti::create($item->toArray());
         }
         $this->info('pindah table AnalisisResponHasil');
         $a = AnalisisResponHasil::all();
+        TujuanAnalisisResponHasil::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisResponHasil::where('config_id', $setConfigId)->first();
-            //masih ambigu mau berpatokan dari id apa ?
-            if (!$cek) {
-                TujuanAnalisisResponHasil::create($item->toArray());
-            }
+            TujuanAnalisisResponHasil::create($item->toArray());
         }
         $this->info('pindah table AnalisisTipeIndikator');
         $a = AnalisisTipeIndikator::all();
+        TujuanAnalisisTipeIndikator::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisTipeIndikator::where('id', $item->id)->first();
-            if (!$cek) {
-                TujuanAnalisisTipeIndikator::create($item->toArray());
-            }
+            TujuanAnalisisTipeIndikator::create($item->toArray());
         }
         $this->info('pindah table AnggotaGrupKontak');
         $a = AnggotaGrupKontak::all();
+        TujuanAnggotaGrupKontak::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnggotaGrupKontak::where('config_id', $setConfigId)->first();
-            //masih ambigu mau berpatokan dari id apa ?
-            if (!$cek) {
-                TujuanAnggotaGrupKontak::create($item->toArray());
-            }
+            TujuanAnggotaGrupKontak::create($item->toArray());
         }
         $this->info('pindah table Anjungan');
         $a = Anjungan::all();
+        TujuanAnjungan::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnjungan::where('config_id', $setConfigId)->where('created_at', $item->crated_at)->first();
-            if (!$cek) {
-                TujuanAnjungan::create($item->toArray());
-            }
+            TujuanAnjungan::create($item->toArray());
         }
         $this->info('pindah table AnjunganMenu');
         $a = AnjunganMenu::all();
+        TujuanAnjunganMenu::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanAnjunganMenu::where('config_id', $setConfigId)->where('urut', $item->urut)->first();
-            if (!$cek) {
-                TujuanAnjunganMenu::create($item->toArray());
-            }
+            TujuanAnjunganMenu::create($item->toArray());
         }
         $this->info('pindah table Area');
         $a = Area::all();
+        TujuanArea::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanArea::where('config_id', $setConfigId)->where('id_cluster', $item->id_cluster)->first();
-            if (!$cek) {
-                TujuanArea::create($item->toArray());
-            }
+            TujuanArea::create($item->toArray());
         }
         $this->info('pindah table Artikel');
         $a = Artikel::all();

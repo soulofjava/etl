@@ -87,20 +87,14 @@ class GCommand extends Command
             }
         }
 
-        // $this->info('pindah table GrupAkses');
-        // $a = GrupAkse::all();
+        $this->info('pindah table GrupAkses');
+        $a = GrupAkse::all();
 
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-
-        //     $cek = TujuanGrupAkse::where('config_id', $setConfigId)
-        //         ->where('id_modul', $item->id_modul)
-        //         ->first();
-
-        //     if (!$cek) {
-        //         TujuanGrupAkse::create($item->toArray());
-        //     }
-        // }
+        TujuanGrupAkse::where('config_id', $setConfigId)->delete();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanGrupAkse::create($item->toArray());
+        }
 
         $this->info('pindah table KehadiranJamKerja');
         $a = KehadiranJamKerja::all();
