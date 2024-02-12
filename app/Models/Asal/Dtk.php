@@ -163,6 +163,8 @@ use Illuminate\Database\Eloquent\Model;
 class Dtk extends Model
 {
 	protected $table = 'dtks';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

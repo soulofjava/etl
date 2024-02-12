@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
 class DtksPengaturanProgram extends Model
 {
 	protected $table = 'dtks_pengaturan_program';
+	public $timestamps = false;
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',

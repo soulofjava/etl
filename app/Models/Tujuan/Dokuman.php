@@ -42,6 +42,8 @@ use Illuminate\Database\Eloquent\Model;
 class Dokuman extends Model
 {
 	protected $table = 'dokumen';
+	public $timestamps = false;
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',

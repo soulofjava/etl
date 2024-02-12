@@ -31,6 +31,8 @@ use Illuminate\Database\Eloquent\Model;
 class DtksLampiran extends Model
 {
 	protected $table = 'dtks_lampiran';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

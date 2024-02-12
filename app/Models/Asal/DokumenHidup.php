@@ -41,6 +41,8 @@ class DokumenHidup extends Model
 {
 	protected $table = 'dokumen_hidup';
 	public $incrementing = false;
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'id' => 'int',

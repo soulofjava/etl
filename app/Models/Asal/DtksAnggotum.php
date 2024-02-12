@@ -94,6 +94,8 @@ use Illuminate\Database\Eloquent\Model;
 class DtksAnggotum extends Model
 {
 	protected $table = 'dtks_anggota';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
