@@ -56,48 +56,38 @@ class BCommand extends Command
         }
         $this->info('pindah table BukuKeperluan');
         $a = BukuKeperluan::all();
+        TujuanBukuKeperluan::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanBukuKeperluan::where('config_id', $setConfigId)->where('created_at', $item->slug)->first();
-            if (!$cek) {
-                TujuanBukuKeperluan::create($item->toArray());
-            }
+            TujuanBukuKeperluan::create($item->toArray());
         }
         $this->info('pindah table BukuKepuasan');
         $a = BukuKepuasan::all();
+        TujuanBukuKepuasan::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanBukuKepuasan::where('config_id', $setConfigId)->where('created_at', $item->slug)->first();
-            if (!$cek) {
-                TujuanBukuKepuasan::create($item->toArray());
-            }
+            TujuanBukuKepuasan::create($item->toArray());
         }
         $this->info('pindah table BukuPertanyaan');
         $a = BukuPertanyaan::all();
+        TujuanBukuPertanyaan::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanBukuPertanyaan::where('config_id', $setConfigId)->where('created_at', $item->slug)->first();
-            if (!$cek) {
-                TujuanBukuPertanyaan::create($item->toArray());
-            }
+            TujuanBukuPertanyaan::create($item->toArray());
         }
         $this->info('pindah table BukuTamu');
         $a = BukuTamu::all();
+        TujuanBukuTamu::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanBukuTamu::where('config_id', $setConfigId)->where('created_at', $item->slug)->first();
-            if (!$cek) {
-                TujuanBukuTamu::create($item->toArray());
-            }
+            TujuanBukuTamu::create($item->toArray());
         }
         $this->info('pindah table BulananAnak');
         $a = BulananAnak::all();
+        TujuanBulananAnak::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $cek = TujuanBulananAnak::where('config_id', $setConfigId)->where('kia_id', $item->slug)->first();
-            if (!$cek) {
-                TujuanBulananAnak::create($item->toArray());
-            }
+            TujuanBulananAnak::create($item->toArray());
         }
     }
 }
