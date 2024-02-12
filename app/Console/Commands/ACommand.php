@@ -148,20 +148,20 @@ class ACommand extends Command
                 TujuanAnalisisPeriode::create($item->toArray());
             }
         }
-        $this->info('pindah table AnalisisRefState');
-        $a = AnalisisRefState::all();
-        TujuanAnalisisRefState::where('config_id', $setConfigId)->delete();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanAnalisisRefState::create($item->toArray());
-        }
-        $this->info('pindah table AnalisisRefSubjek');
-        $a = AnalisisRefSubjek::all();
-        TujuanAnalisisRefSubjek::where('config_id', $setConfigId)->delete();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanAnalisisRefSubjek::create($item->toArray());
-        }
+        // $this->info('pindah table AnalisisRefState');
+        // $a = AnalisisRefState::all();
+        // TujuanAnalisisRefState::where('config_id', $setConfigId)->delete();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     TujuanAnalisisRefState::create($item->toArray());
+        // }
+        // $this->info('pindah table AnalisisRefSubjek');
+        // $a = AnalisisRefSubjek::all();
+        // TujuanAnalisisRefSubjek::where('config_id', $setConfigId)->delete();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     TujuanAnalisisRefSubjek::create($item->toArray());
+        // }
         $this->info('pindah table AnalisisRespon');
         $a = AnalisisRespon::all();
         TujuanAnalisisRespon::where('config_id', $setConfigId)->delete();
@@ -178,18 +178,17 @@ class ACommand extends Command
         }
         $this->info('pindah table AnalisisResponHasil');
         $a = AnalisisResponHasil::all();
-        TujuanAnalisisResponHasil::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanAnalisisResponHasil::create($item->toArray());
         }
-        $this->info('pindah table AnalisisTipeIndikator');
-        $a = AnalisisTipeIndikator::all();
-        TujuanAnalisisTipeIndikator::where('config_id', $setConfigId)->delete();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanAnalisisTipeIndikator::create($item->toArray());
-        }
+        // $this->info('pindah table AnalisisTipeIndikator');
+        // $a = AnalisisTipeIndikator::all();
+        // TujuanAnalisisTipeIndikator::where('config_id', $setConfigId)->delete();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     TujuanAnalisisTipeIndikator::create($item->toArray());
+        // }
         $this->info('pindah table AnggotaGrupKontak');
         $a = AnggotaGrupKontak::all();
         TujuanAnggotaGrupKontak::where('config_id', $setConfigId)->delete();

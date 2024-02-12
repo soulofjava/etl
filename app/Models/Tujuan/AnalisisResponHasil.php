@@ -40,6 +40,9 @@ class AnalisisResponHasil extends Model
 	];
 
 	protected $fillable = [
+		'id_master',
+		'id_periode',
+		'id_subjek',
 		'config_id',
 		'akumulasi',
 		'tgl_update'

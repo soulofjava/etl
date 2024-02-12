@@ -184,19 +184,19 @@ class Dtk extends Model
 		'jumlah_unggas' => 'int',
 		'jumlah_ikan' => 'int',
 		'jumlah_lainnya' => 'int',
-		'tahun_bss_bnpt' => 'datetime',
-		'tahun_pkh' => 'datetime',
-		'tahun_bst_covid19' => 'datetime',
-		'tahun_blt_dana_desa' => 'datetime',
-		'tahun_subsidi_listrik' => 'datetime',
-		'tahun_asuransi_lain' => 'datetime',
-		'tahun_bantuan_pemprov' => 'datetime',
-		'tahun_bantuan_pemkabkot' => 'datetime',
-		'tahun_bantuan_pemdes' => 'datetime',
-		'tahun_bantuan_pemda' => 'datetime',
-		'tahun_bantuan_masyarakat' => 'datetime',
-		'tahun_subsidi_pupuk' => 'datetime',
-		'tahun_subsidi_lpg' => 'datetime'
+		'tahun_bss_bnpt' => 'string',
+		'tahun_pkh' => 'string',
+		'tahun_bst_covid19' => 'string',
+		'tahun_blt_dana_desa' => 'string',
+		'tahun_subsidi_listrik' => 'string',
+		'tahun_asuransi_lain' => 'string',
+		'tahun_bantuan_pemprov' => 'string',
+		'tahun_bantuan_pemkabkot' => 'string',
+		'tahun_bantuan_pemdes' => 'string',
+		'tahun_bantuan_pemda' => 'string',
+		'tahun_bantuan_masyarakat' => 'string',
+		'tahun_subsidi_pupuk' => 'string',
+		'tahun_subsidi_lpg' => 'string'
 	];
 
 	protected $fillable = [

@@ -55,6 +55,7 @@ class Covid19Vaksin extends Model
 	];
 
 	protected $fillable = [
+		'id_penduduk',
 		'config_id',
 		'vaksin_1',
 		'tgl_vaksin_1',
