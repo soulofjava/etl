@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\Model;
 class InventarisPeralatan extends Model
 {
 	protected $table = 'inventaris_peralatan';
+	public $timestamps = false;
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',

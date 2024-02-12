@@ -48,6 +48,8 @@ use Illuminate\Database\Eloquent\Model;
 class InventarisAsset extends Model
 {
 	protected $table = 'inventaris_asset';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

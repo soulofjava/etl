@@ -41,6 +41,8 @@ class IbuHamil extends Model
 {
 	protected $table = 'ibu_hamil';
 	protected $primaryKey = 'id_ibu_hamil';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
