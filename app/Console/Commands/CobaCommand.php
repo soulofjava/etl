@@ -115,6 +115,7 @@ class CobaCommand extends Command
 
         $this->info('pindah table pesan');
         $a = Pesan::all();
+        $pesanDetail = "";
         foreach ($a as $pesan) {
             // Set the new config_id
             $pesan->config_id = $setConfigId;
@@ -123,16 +124,19 @@ class CobaCommand extends Command
             $tujuanPesan = TujuanPesan::create($pesan->toArray());
 
             // Find the related PesanDetail
-            $pesanDetail = PesanDetail::where('pesan_id', $pesan->id)->first();
+            $pesanDetail = PesanDetail::where('pesan_id', $pesan->id)->get();
 
             // If PesanDetail exists, create a new record in TujuanPesanDetail
             if ($pesanDetail) {
-                // Update pesan_id to the newly created TujuanPesan record
-                $pesanDetail->pesan_id = $tujuanPesan->id;
-                $pesanDetail->config_id = $setConfigId; // Set the new config_id if needed
+                foreach ($pesanDetail as $hallo) {
+                    $this->info('idnya ' . $tujuanPesan->id);
+                    // Update pesan_id to the newly created TujuanPesan record
+                    $pesanDetail->pesan_id = $tujuanPesan->id;
+                    $pesanDetail->config_id = $setConfigId; // Set the new config_id if needed
 
-                // Create a new record in TujuanPesanDetail
-                TujuanPesanDetail::create($pesanDetail->toArray());
+                    // Create a new record in TujuanPesanDetail
+                    TujuanPesanDetail::create($hallo->toArray());
+                }
             }
         }
 
@@ -143,326 +147,130 @@ class CobaCommand extends Command
             TujuanPosyandu::create($item->toArray());
         }
 
-        // Parent
-        $this->info('pindah table tweb_penduduk');
-        $a = TwebPenduduk::all();
+        $this->info('pindah table ref_jabatan');
+        $a = RefJabatan::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            // $cek = TujuanTwebPenduduk::where('config_id', $setConfigId)->first();
-            // if (!$cek) {
-            TujuanTwebPenduduk::create($item->toArray());
-            // }
+            TujuanRefJabatan::create($item->toArray());
         }
 
-        $this->info('pindah table produk_kategori');
-        $a = ProdukKategori::all();
+        $this->info('pindah table ref_syarat_surat');
+        $a = RefSyaratSurat::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            // $cek = TujuanProdukKategori::where('config_id', $setConfigId)->first();
-            // if ($cek) {
-            TujuanProdukKategori::create($item->toArray());
-            // }
+            TujuanRefSyaratSurat::create($item->toArray());
         }
 
-        $this->info('pindah table pelapak');
-        $a = Pelapak::all();
+        $this->info('pindah table sentitems');
+        $a = Sentitem::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            // $cek = TujuanPelapak::where('config_id', $setConfigId)->first();
-            // if ($cek) {
-            TujuanPelapak::create($item->toArray());
-            // }
+            TujuanSentitem::create($item->toArray());
         }
 
-        $this->info('pindah table produk');
-        $a = Produk::all();
+        $this->info('pindah table setting_aplikasi');
+        $a = SettingAplikasi::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            // $cek = TujuanProduk::where('config_id', $setConfigId)->first();
-            // if ($cek) {
-            TujuanProduk::create($item->toArray());
-            // }
+            TujuanSettingAplikasi::create($item->toArray());
         }
 
-        // $this->info('pindah table program');
-        // $a = Program::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanProgram::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanProgram::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table statistics');
+        $a = Statistic::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanStatistic::create($item->toArray());
+        }
 
-        // $this->info('pindah table program_peserta');
-        // $a = ProgramPesertum::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanProgramPesertum::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanProgramPesertum::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table surat_keluar');
+        $a = SuratKeluar::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanSuratKeluar::create($item->toArray());
+        }
 
-        // $this->info('pindah table ref_jabatan');
-        // $a = RefJabatan::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanRefJabatan::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanRefJabatan::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table surat_masuk');
+        $a = SuratMasuk::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanSuratMasuk::create($item->toArray());
+        }
 
-        // $this->info('pindah table ref_syarat_surat');
-        // $a = RefSyaratSurat::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanRefSyaratSurat::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanRefSyaratSurat::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table tanah_desa');
+        $a = TanahDesa::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanTanahDesa::create($item->toArray());
+        }
 
-        // $this->info('pindah table sasaran_paud');
-        // $a = SasaranPaud::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanSasaranPaud::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanSasaranPaud::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table tanah_kas_desa');
+        $a = TanahKasDesa::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanTanahKasDesa::create($item->toArray());
+        }
 
-        // $this->info('pindah table sentitems');
-        // $a = Sentitem::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanSentitem::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanSentitem::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table teks_berjalan');
+        $a = TeksBerjalan::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanTeksBerjalan::create($item->toArray());
+        }
 
-        // $this->info('pindah table setting_aplikasi');
-        // $a = SettingAplikasi::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanSettingAplikasi::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanSettingAplikasi::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table tweb_penduduk_umur');
+        $a = TwebPendudukUmur::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanTwebPendudukUmur::create($item->toArray());
+        }
 
-        // // $this->info('pindah table setting_modul');
-        // // $a = SettingModul::all();
-        // // foreach ($a as $item) {
-        // //     $item->config_id = $setConfigId;
-        // //     $cek = SettingModul::where('config_id', $setConfigId)->first();
-        // //     if ($cek) {
-        // //         SettingModul::create($item->toArray());
-        // //     }
-        // // }
+        $this->info('pindah table tweb_rtm');
+        $a = TwebRtm::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanTwebRtm::create($item->toArray());
+        }
 
-        // $this->info('pindah table statistics');
-        // $a = Statistic::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanStatistic::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanStatistic::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table tweb_surat_format');
+        $a = TwebSuratFormat::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanTwebSuratFormat::create($item->toArray());
+        }
 
-        // $this->info('pindah table suplemen');
-        // $a = Supleman::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanSupleman::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanSupleman::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table tweb_wil_clusterdesa');
+        $a = TwebWilClusterdesa::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanTwebWilClusterdesa::create($item->toArray());
+        }
 
-        // $this->info('pindah table suplemen_terdata');
-        // $a = SuplemenTerdatum::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanSuplemenTerdatum::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanSuplemenTerdatum::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table urls');
+        $a = Url::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanUrl::create($item->toArray());
+        }
 
-        // $this->info('pindah table surat_keluar');
-        // $a = SuratKeluar::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanSuratKeluar::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanSuratKeluar::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table user');
+        $a = User::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanUser::create($item->toArray());
+        }
 
-        // $this->info('pindah table surat_masuk');
-        // $a = SuratMasuk::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanSuratMasuk::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanSuratMasuk::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table user_grup');
+        $a = UserGrup::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanUserGrup::create($item->toArray());
+        }
 
-        // // $this->info('pindah table sys_traffic');
-        // // $a = SysTraffic::all();
-        // // foreach ($a as $item) {
-        // //     $item->config_id = $setConfigId;
-        // //     $cek = TujuanSysTraffic::where('config_id', $setConfigId)->first();
-        // //     if ($cek) {
-        // //         TujuanSysTraffic::create($item->toArray());
-        // //     }
-        // // }
-
-
-        // $this->info('pindah table tanah_desa');
-        // $a = TanahDesa::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTanahDesa::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTanahDesa::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tanah_kas_desa');
-        // $a = TanahKasDesa::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTanahKasDesa::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTanahKasDesa::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table teks_berjalan');
-        // $a = TeksBerjalan::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTeksBerjalan::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTeksBerjalan::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tweb_desa_pamong');
-        // $a = TwebDesaPamong::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TwebDesaPamong::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TwebDesaPamong::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tweb_keluarga');
-        // $a = TwebKeluarga::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTwebKeluarga::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTwebKeluarga::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tweb_penduduk_mandiri');
-        // $a = TwebPendudukMandiri::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTwebPendudukMandiri::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTwebPendudukMandiri::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tweb_penduduk_umur');
-        // $a = TwebPendudukUmur::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTwebPendudukUmur::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTwebPendudukUmur::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tweb_rtm');
-        // $a = TwebRtm::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTwebRtm::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTwebRtm::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tweb_surat_format');
-        // $a = TwebSuratFormat::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTwebSuratFormat::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTwebSuratFormat::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table tweb_wil_clusterdesa');
-        // $a = TwebWilClusterdesa::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanTwebWilClusterdesa::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanTwebWilClusterdesa::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table urls');
-        // $a = Url::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanUrl::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanUrl::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table user');
-        // $a = User::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanUser::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanUser::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table user_grup');
-        // $a = UserGrup::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanUserGrup::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanUserGrup::create($item->toArray());
-        //     }
-        // }
-
-        // $this->info('pindah table widget');
-        // $a = Widget::all();
-        // foreach ($a as $item) {
-        //     $item->config_id = $setConfigId;
-        //     $cek = TujuanWidget::where('config_id', $setConfigId)->first();
-        //     if ($cek) {
-        //         TujuanWidget::create($item->toArray());
-        //     }
-        // }
+        $this->info('pindah table widget');
+        $a = Widget::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanWidget::create($item->toArray());
+        }
     }
 }
