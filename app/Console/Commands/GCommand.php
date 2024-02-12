@@ -4,8 +4,11 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Asal\Config;
+use App\Models\Asal\GambarGallery;
+use App\Models\Asal\Gari;
 use App\Models\Asal\GisSimbol;
 use App\Models\Asal\GrupAkse;
+use App\Models\Asal\HubungWarga;
 use App\Models\Asal\KehadiranJamKerja;
 use App\Models\Asal\SettingModul;
 use App\Models\Asal\User;
@@ -13,8 +16,11 @@ use App\Models\Asal\UserGrup;
 use App\Models\Tujuan\User as TujuanUser;
 use App\Models\Tujuan\UserGrup as TujuanUserGrup;
 use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Tujuan\GambarGallery as TujuanGambarGallery;
+use App\Models\Tujuan\Gari as TujuanGari;
 use App\Models\Tujuan\GisSimbol as TujuanGisSimbol;
 use App\Models\Tujuan\GrupAkse as TujuanGrupAkse;
+use App\Models\Tujuan\HubungWarga as TujuanHubungWarga;
 use App\Models\Tujuan\KehadiranJamKerja as TujuanKehadiranJamKerja;
 use App\Models\Tujuan\SettingModul as TujuanSettingModul;
 
@@ -56,7 +62,20 @@ class GCommand extends Command
                 $setConfigId = $cek->id;
             }
         }
-
+        $this->info('pindah table GambarGallery');
+        $a = GambarGallery::all();
+        TujuanGambarGallery::where('config_id', $setConfigId)->delete();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanGambarGallery::create($item->toArray());
+        }
+        $this->info('pindah table Garis');
+        $a = Gari::all();
+        TujuanGari::where('config_id', $setConfigId)->delete();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanGari::create($item->toArray());
+        }
         $this->info('pindah table GisSimbol');
         $a = GisSimbol::all();
         foreach ($a as $item) {
@@ -95,7 +114,14 @@ class GCommand extends Command
             $item->config_id = $setConfigId;
             TujuanGrupAkse::create($item->toArray());
         }
+        $this->info('pindah table HubungWarga');
+        $a = HubungWarga::all();
 
+        TujuanHubungWarga::where('config_id', $setConfigId)->delete();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanHubungWarga::create($item->toArray());
+        }
         $this->info('pindah table KehadiranJamKerja');
         $a = KehadiranJamKerja::all();
         foreach ($a as $item) {

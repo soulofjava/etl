@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
 class HubungWarga extends Model
 {
 	protected $table = 'hubung_warga';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
