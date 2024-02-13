@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\Model;
 class KehadiranAlasanKeluar extends Model
 {
 	protected $table = 'kehadiran_alasan_keluar';
+	public $timestamps = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

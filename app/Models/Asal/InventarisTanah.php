@@ -49,7 +49,7 @@ class InventarisTanah extends Model
 	protected $casts = [
 		'config_id' => 'int',
 		'luas' => 'int',
-		'tahun_pengadaan' => 'datetime',
+		'tahun_pengadaan' => 'string',
 		'tanggal_sertifikat' => 'datetime',
 		'harga' => 'float',
 		'created_by' => 'int',

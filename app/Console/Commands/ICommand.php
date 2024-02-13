@@ -99,6 +99,7 @@ class ICommand extends Command
         $a = InventarisKontruksi::all();
         TujuanInventarisKontruksi::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
+            $this->info($item);
             $item->config_id = $setConfigId;
             TujuanInventarisKontruksi::create($item->toArray());
         }
@@ -107,7 +108,7 @@ class ICommand extends Command
         TujuanInventarisPeralatan::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            TujuanInventarisKontruksi::create($item->toArray());
+            TujuanInventarisPeralatan::create($item->toArray());
         }
         $this->info('pindah table InventarisTanah');
         $a = InventarisTanah::all();

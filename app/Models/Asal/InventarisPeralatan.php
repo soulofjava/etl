@@ -50,7 +50,7 @@ class InventarisPeralatan extends Model
 
 	protected $casts = [
 		'config_id' => 'int',
-		'tahun_pengadaan' => 'datetime',
+		'tahun_pengadaan' => 'string',
 		'harga' => 'float',
 		'created_by' => 'int',
 		'updated_by' => 'int',

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Kelompok
  * 
  * @property int $id
+ * @property int $id_lama
  * @property int|null $config_id
  * @property int $id_master
  * @property int $id_ketua
@@ -37,10 +38,12 @@ class Kelompok extends Model
 	protected $casts = [
 		'config_id' => 'int',
 		'id_master' => 'int',
-		'id_ketua' => 'int'
+		'id_ketua' => 'int',
+		'id_lama' => 'int'
 	];
 
 	protected $fillable = [
+		'id_lama',
 		'config_id',
 		'id_master',
 		'id_ketua',
