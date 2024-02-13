@@ -28,16 +28,18 @@ use Illuminate\Database\Eloquent\Model;
 class Pesan extends Model
 {
 	protected $table = 'pesan';
-	public $incrementing = false;
+	public $incrementing = true;
+	protected $connection = "tujuan";
 
 	protected $casts = [
-		'id' => 'int',
+
 		'config_id' => 'int',
 		'sudah_dibaca' => 'int',
 		'diarsipkan' => 'int'
 	];
 
 	protected $fillable = [
+
 		'config_id',
 		'judul',
 		'jenis',

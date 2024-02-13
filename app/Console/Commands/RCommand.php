@@ -2,20 +2,22 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Asal\TwebKeluarga as AsalKeluarga;
-use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
-use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
+use App\Models\Asal\RefJabatan;
+use App\Models\Asal\RefSyaratSurat;
+use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Tujuan\RefJabatan as TujuanRefJabatan;
+use App\Models\Tujuan\RefSyaratSurat as TujuanRefSyaratSurat;
+use Illuminate\Console\Command;
 
-class KeluargaCommand extends Command
+class RCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:keluarga-command';
+    protected $signature = 'app:r-command';
 
     /**
      * The console command description.
@@ -47,13 +49,18 @@ class KeluargaCommand extends Command
             }
         }
 
-        $data = AsalKeluarga::with(['penduduk'])->get();
-        foreach ($data as $asal) {
-            $asal = $asal->toArray()->except(['id']);
-            $asal['config_id'] =   $setConfigId;
-            $a = TujuanKeluarga::create($asal);
-            foreach ($asal->penduduk as $penduduk) {
-            }
+        $this->info('pindah table ref_jabatan');
+        $a = RefJabatan::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanRefJabatan::create($item->toArray());
+        }
+
+        $this->info('pindah table ref_syarat_surat');
+        $a = RefSyaratSurat::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanRefSyaratSurat::create($item->toArray());
         }
     }
 }

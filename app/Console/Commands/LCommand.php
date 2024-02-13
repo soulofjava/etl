@@ -2,20 +2,22 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Asal\TwebKeluarga as AsalKeluarga;
-use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
-use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
+use App\Models\Asal\LaporanSinkronisasi;
+use App\Models\Asal\Line;
+use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Tujuan\LaporanSinkronisasi as TujuanLaporanSinkronisasi;
+use App\Models\Tujuan\Line as TujuanLine;
+use Illuminate\Console\Command;
 
-class KeluargaCommand extends Command
+class LCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:keluarga-command';
+    protected $signature = 'app:l-command';
 
     /**
      * The console command description.
@@ -47,13 +49,18 @@ class KeluargaCommand extends Command
             }
         }
 
-        $data = AsalKeluarga::with(['penduduk'])->get();
-        foreach ($data as $asal) {
-            $asal = $asal->toArray()->except(['id']);
-            $asal['config_id'] =   $setConfigId;
-            $a = TujuanKeluarga::create($asal);
-            foreach ($asal->penduduk as $penduduk) {
-            }
+        $this->info('pindah table laporan_sinkronisasi');
+        $a = LaporanSinkronisasi::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanLaporanSinkronisasi::create($item->toArray());
+        }
+
+        $this->info('pindah table line');
+        $a = Line::all();
+        $b = "";
+        foreach ($a as $item) {
+            $b = TujuanLine::create($item->toArray());
         }
     }
 }

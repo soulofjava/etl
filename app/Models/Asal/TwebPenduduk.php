@@ -101,6 +101,7 @@ use Illuminate\Database\Eloquent\Model;
 class TwebPenduduk extends Model
 {
 	protected $table = 'tweb_penduduk';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
@@ -256,5 +257,10 @@ class TwebPenduduk extends Model
 	public function tweb_penduduk_mandiri()
 	{
 		return $this->hasOne(TwebPendudukMandiri::class, 'id_pend');
+	}
+
+	public function rtm()
+	{
+		return $this->hasOne(TwebRtm::class, 'id_rtm');
 	}
 }

@@ -2,20 +2,20 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Asal\TwebKeluarga as AsalKeluarga;
-use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
-use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
+use App\Models\Asal\Notifikasi;
+use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Tujuan\Notifikasi as TujuanNotifikasi;
+use Illuminate\Console\Command;
 
-class KeluargaCommand extends Command
+class NCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:keluarga-command';
+    protected $signature = 'app:n-command';
 
     /**
      * The console command description.
@@ -47,13 +47,11 @@ class KeluargaCommand extends Command
             }
         }
 
-        $data = AsalKeluarga::with(['penduduk'])->get();
-        foreach ($data as $asal) {
-            $asal = $asal->toArray()->except(['id']);
-            $asal['config_id'] =   $setConfigId;
-            $a = TujuanKeluarga::create($asal);
-            foreach ($asal->penduduk as $penduduk) {
-            }
+        $this->info('pindah table sentitems');
+        $a = Notifikasi::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanNotifikasi::create($item->toArray());
         }
     }
 }

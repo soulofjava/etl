@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
 class Produk extends Model
 {
 	protected $table = 'produk';
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',

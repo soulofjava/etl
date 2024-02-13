@@ -101,6 +101,7 @@ use Illuminate\Database\Eloquent\Model;
 class TwebPenduduk extends Model
 {
 	protected $table = 'tweb_penduduk';
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',

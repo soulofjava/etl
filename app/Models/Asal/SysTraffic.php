@@ -35,6 +35,8 @@ class SysTraffic extends Model
 	];
 
 	protected $fillable = [
+		'Tanggal',
+		'config_id',
 		'ipAddress',
 		'Jumlah'
 	];

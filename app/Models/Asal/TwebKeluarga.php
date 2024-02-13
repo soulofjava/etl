@@ -72,4 +72,9 @@ class TwebKeluarga extends Model
 	{
 		return $this->hasMany(DtksAnggotum::class, 'id_keluarga');
 	}
+
+	public function penduduk()
+	{
+		return $this->hasMany(TwebPenduduk::class, 'id_kk');
+	}
 }

@@ -29,6 +29,7 @@ class PesanDetail extends Model
 {
 	protected $table = 'pesan_detail';
 	public $incrementing = false;
+	protected $connection = "asal";
 
 	protected $casts = [
 		'id' => 'int',

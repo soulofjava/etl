@@ -31,7 +31,10 @@ use Illuminate\Database\Eloquent\Model;
 class UserGrup extends Model
 {
 	protected $table = 'user_grup';
+<<<<<<< HEAD
 	public $timestamps = false;
+=======
+>>>>>>> 0a8117707e443afbdd0b0ec2c6ce47ba9cc86ed6
 	protected $connection = "asal";
 
 	protected $casts = [

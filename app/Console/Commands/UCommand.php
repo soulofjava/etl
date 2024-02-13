@@ -2,20 +2,24 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\Asal\TwebKeluarga as AsalKeluarga;
-use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
-use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
+use App\Models\Asal\Url;
+use App\Models\Asal\User;
+use App\Models\Asal\UserGrup;
+use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Tujuan\Url as TujuanUrl;
+use App\Models\Tujuan\User as TujuanUser;
+use App\Models\Tujuan\UserGrup as TujuanUserGrup;
+use Illuminate\Console\Command;
 
-class KeluargaCommand extends Command
+class UCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:keluarga-command';
+    protected $signature = 'app:u-command';
 
     /**
      * The console command description.
@@ -47,13 +51,25 @@ class KeluargaCommand extends Command
             }
         }
 
-        $data = AsalKeluarga::with(['penduduk'])->get();
-        foreach ($data as $asal) {
-            $asal = $asal->toArray()->except(['id']);
-            $asal['config_id'] =   $setConfigId;
-            $a = TujuanKeluarga::create($asal);
-            foreach ($asal->penduduk as $penduduk) {
-            }
+        $this->info('pindah table urls');
+        $a = Url::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanUrl::create($item->toArray());
+        }
+
+        $this->info('pindah table user');
+        $a = User::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanUser::create($item->toArray());
+        }
+
+        $this->info('pindah table user_grup');
+        $a = UserGrup::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanUserGrup::create($item->toArray());
         }
     }
 }
