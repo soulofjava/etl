@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 class LaporanSinkronisasi extends Model
 {
 	protected $table = 'laporan_sinkronisasi';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

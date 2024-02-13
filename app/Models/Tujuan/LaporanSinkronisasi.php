@@ -30,10 +30,11 @@ use Illuminate\Database\Eloquent\Model;
 class LaporanSinkronisasi extends Model
 {
 	protected $table = 'laporan_sinkronisasi';
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',
-		'tahun' => 'int',
+		'tahun' => 'string',
 		'semester' => 'int',
 		'kirim' => 'datetime'
 	];
