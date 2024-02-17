@@ -70,4 +70,23 @@ class AnalisisMaster extends Model
 	{
 		return $this->belongsTo(Config::class);
 	}
+
+	public function analisisIndikator()
+	{
+		return $this->hasMany(AnalisisIndikator::class, 'id_master', 'id');
+	}
+
+	public function analisisKategoriIndikator()
+	{
+		return $this->hasMany(AnalisisKategoriIndikator::class, 'id_master', 'id');
+	}
+
+	public function analisisKlasifikasi()
+	{
+		return $this->hasMany(AnalisisKlasifikasi::class, 'id_master', 'id');
+	}
+	public function analisisPeriode()
+	{
+		return $this->hasMany(AnalisisPeriode::class, 'id_master', 'id');
+	}
 }
