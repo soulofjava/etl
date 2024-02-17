@@ -126,6 +126,8 @@ class AnalisisCommand extends Command
                         $hasilanalisisParameter = $hasilanalisisIndikator->analisisParameter()->create($isianalisisParameter);
                         $this->info('pindah data analisisParameter');
                     }
+
+                    //analisisRespon Ambigu di id_paramater tidak sesuai
                     foreach ($analisisIndikator->analisisRespon ?? [] as $analisisRespon) {
                         $isiAnalisisRespon = Arr::except($analisisRespon->toArray(), ['id', 'id_parameter']);
                         $isiAnalisisRespon['config_id'] = $setConfigId;
