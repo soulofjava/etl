@@ -5,9 +5,13 @@ namespace App\Console\Commands;
 use App\Models\Asal\Config;
 use App\Models\Asal\LaporanSinkronisasi;
 use App\Models\Asal\Line;
+use App\Models\Asal\LogHapusPenduduk;
+use App\Models\Asal\LogTte;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\LaporanSinkronisasi as TujuanLaporanSinkronisasi;
 use App\Models\Tujuan\Line as TujuanLine;
+use App\Models\Tujuan\LogHapusPenduduk as TujuanLogHapusPenduduk;
+use App\Models\Tujuan\LogTte as TujuanLogTte;
 use Illuminate\Console\Command;
 
 class LCommand extends Command
@@ -56,11 +60,25 @@ class LCommand extends Command
             TujuanLaporanSinkronisasi::create($item->toArray());
         }
 
-        $this->info('pindah table line');
-        $a = Line::all();
-        $b = "";
+        // $this->info('pindah table line');
+        // $a = Line::all();
+        // $b = "";
+        // foreach ($a as $item) {
+        //     $b = TujuanLine::create($item->toArray());
+        // }
+
+        $this->info('pindah table log_hapus_penduduk');
+        $a = LogHapusPenduduk::all();
         foreach ($a as $item) {
-            $b = TujuanLine::create($item->toArray());
+            $item->config_id = $setConfigId;
+            TujuanLogHapusPenduduk::create($item->toArray());
+        }
+
+        $this->info('pindah table log_tte');
+        $a = LogTte::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            TujuanLogTte::create($item->toArray());
         }
     }
 }

@@ -9,6 +9,7 @@ namespace App\Models\Tujuan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class Program
@@ -36,6 +37,7 @@ use Illuminate\Database\Eloquent\Model;
 class Program extends Model
 {
 	protected $table = 'program';
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',
@@ -50,6 +52,7 @@ class Program extends Model
 
 	protected $fillable = [
 		'config_id',
+		'slug',
 		'nama',
 		'sasaran',
 		'ndesc',
@@ -71,4 +74,38 @@ class Program extends Model
 	{
 		return $this->hasMany(DtksPengaturanProgram::class, 'id_bantuan');
 	}
+
+	// public function generateSlug()
+	// {
+	// 	$baseSlug = Str::slug($this->nama);
+	// 	$slug = $baseSlug;
+	// 	$count = 1;
+
+	// 	while ($this->slugExists($slug, $this->id)) {
+	// 		$slug = $baseSlug . '-' . $count;
+	// 		$count++;
+	// 	}
+
+	// 	$this->slug = $slug;
+	// }
+
+	// private function slugExists($slug, $currentId = null)
+	// {
+	// 	$query = static::where('slug', $slug);
+
+	// 	if ($currentId !== null) {
+	// 		$query->where('id', '!=', $currentId);
+	// 	}
+
+	// 	return $query->exists();
+	// }
+
+	// protected static function boot()
+	// {
+	// 	parent::boot();
+
+	// 	static::creating(function ($post) {
+	// 		$post->generateSlug();
+	// 	});
+	// }
 }

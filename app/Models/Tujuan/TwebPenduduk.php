@@ -267,4 +267,12 @@ class TwebPenduduk extends Model
 	{
 		return $this->hasMany(Dtk::class, 'id_keluarga');
 	}
+	public function pelapak()
+	{
+		return $this->hasOne(Pelapak::class, 'id_pend');
+	}
+	public function program_peserta()
+	{
+		return $this->hasMany(ProgramPesertum::class, 'kartu_id_pend');
+	}
 }

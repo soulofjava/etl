@@ -67,4 +67,9 @@ class ProgramPesertum extends Model
 	{
 		return $this->belongsTo(Config::class);
 	}
+
+	public function program()
+	{
+		return $this->hasOne(Program::class, 'id', 'program_id');
+	}
 }

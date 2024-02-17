@@ -36,6 +36,7 @@ use Illuminate\Database\Eloquent\Model;
 class Program extends Model
 {
 	protected $table = 'program';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',
@@ -50,6 +51,7 @@ class Program extends Model
 
 	protected $fillable = [
 		'config_id',
+		'slug',
 		'nama',
 		'sasaran',
 		'ndesc',
