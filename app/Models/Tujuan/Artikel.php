@@ -83,4 +83,11 @@ class Artikel extends Model
 	{
 		return $this->hasMany(Agenda::class, 'id_artikel');
 	}
+
+
+
+	public function users()
+	{
+		return $this->hasMany(User::class, 'id_user');
+	}
 }
