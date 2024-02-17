@@ -13,11 +13,13 @@ use App\Models\Asal\AnalisisMaster as AsalAnalisisMaster;
 use App\Models\Tujuan\AnalisisMaster as TujuanAnalisisMaster;
 use App\Models\Tujuan\AnalisisKategoriIndikator as TujuanAnalisisKategoriIndikator;
 use App\Models\Tujuan\AnalisisIndikator as TujuanAnalisisIndikator;
-use App\Models\Asal\AnalisisParameter as TujuanAnalisisParameter;
+use App\Models\Tujuan\AnalisisParameter as TujuanAnalisisParameter;
 use App\Models\Asal\AnalisisRefState as AsalAnalisisRefState;
 use App\Models\Tujuan\AnalisisRefState as TujuanAnalisisRefState;
 use App\Models\Asal\AnalisisRefSubjek as AsalAnalisisRefSubjek;
 use App\Models\Tujuan\AnalisisRefSubjek as TujuanAnalisisRefSubjek;
+use App\Models\Tujuan\AnalisisKlasifikasi as TujuanAnalisisKlasifikasi;
+use App\Models\Tujuan\AnalisisPeriode as TujuanAnalisisPeriode;
 use App\Models\Asal\AnalisisRespon as AsalAnalisisRespon;
 use App\Models\Tujuan\AnalisisRespon as TujuanAnalisisRespon;
 
@@ -64,6 +66,8 @@ class AnalisisCommand extends Command
             TujuanAnalisisKategoriIndikator::where('config_id', $setConfigId)->delete();
             TujuanAnalisisIndikator::where('config_id', $setConfigId)->delete();
             TujuanAnalisisParameter::where('config_id', $setConfigId)->delete();
+            TujuanAnalisisKlasifikasi::where('config_id', $setConfigId)->delete();
+            TujuanAnalisisPeriode::where('config_id', $setConfigId)->delete();
             TujuanAnalisisRespon::where('config_id', $setConfigId)->delete();
 
             $this->info('pindah data AnalisisTipeIndikator');
@@ -87,7 +91,7 @@ class AnalisisCommand extends Command
             foreach ($AsalAnalisisRefSubjek as $item) {
                 $cek = TujuanAnalisisRefSubjek::where('id', $item->id)->first();
                 if (!$cek) {
-                    TujuanAnalisisRefSubjek::create($item->toArray());
+                    $a = TujuanAnalisisRefSubjek::create($item->toArray());
                 }
             }
 
@@ -120,22 +124,22 @@ class AnalisisCommand extends Command
                     $hasilanalisisIndikator = $hasilTujuanAnalisisMaster->analisisIndikator()->create($isianalisisIndikator);
                     $this->info('pindah data analisisIndikator');
                     foreach ($analisisIndikator->analisisParameter ?? [] as $analisisParameter) {
-                        $isianalisisParameter = Arr::except($analisisParameter->toArray(), ['id']);
+                        $isianalisisParameter = Arr::except($analisisParameter->toArray(), ['id', 'id_indikator']);
                         $isianalisisParameter['id_indikator'] = $hasilanalisisIndikator->id;
                         $isianalisisParameter['config_id'] = $setConfigId;
                         $hasilanalisisParameter = $hasilanalisisIndikator->analisisParameter()->create($isianalisisParameter);
+
                         $this->info('pindah data analisisParameter');
+                        foreach ($analisisParameter->analisisRespon ?? [] as $analisisRespon) {
+                            $isiAnalisisRespon = $analisisRespon->toArray();
+                            $isiAnalisisRespon['config_id'] = $setConfigId;
+                            $hasilanalisisParameter->analisisRespon()->create($isiAnalisisRespon);
+                        }
                     }
 
+
                     //analisisRespon Ambigu di id_paramater tidak sesuai
-                    foreach ($analisisIndikator->analisisRespon ?? [] as $analisisRespon) {
-                        $isiAnalisisRespon = Arr::except($analisisRespon->toArray(), ['id', 'id_parameter']);
-                        $isiAnalisisRespon['config_id'] = $setConfigId;
-                        $isiAnalisisRespon['id_indikator'] = $hasilanalisisIndikator->id;
-                        $isiAnalisisRespon['id_parameter'] = $hasilanalisisParameter->id;
-                        $isiAnalisisRespon['id_periode'] = $hasilAnalisisPeriode->id;
-                        $hasilanalisisIndikator->analisisRespon()->create($isiAnalisisRespon);
-                    }
+
                 }
 
                 foreach ($asal->analisisKlasifikasi ?? [] as $analisisKlasifikasi) {
