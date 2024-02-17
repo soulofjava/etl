@@ -131,6 +131,7 @@ class AnalisisCommand extends Command
 
                         $this->info('pindah data analisisParameter');
                         foreach ($analisisParameter->analisisRespon ?? [] as $analisisRespon) {
+                            $this->info('pindah data analisisRespon');
                             $isiAnalisisRespon = $analisisRespon->toArray();
                             $isiAnalisisRespon['config_id'] = $setConfigId;
                             $hasilanalisisParameter->analisisRespon()->create($isiAnalisisRespon);
