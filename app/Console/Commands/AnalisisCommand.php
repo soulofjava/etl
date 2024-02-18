@@ -22,6 +22,8 @@ use App\Models\Tujuan\AnalisisKlasifikasi as TujuanAnalisisKlasifikasi;
 use App\Models\Tujuan\AnalisisPeriode as TujuanAnalisisPeriode;
 use App\Models\Asal\AnalisisRespon as AsalAnalisisRespon;
 use App\Models\Tujuan\AnalisisRespon as TujuanAnalisisRespon;
+use App\Models\Tujuan\AnalisisResponBukti as TujuanAnalisisResponBukti;
+use App\Models\Tujuan\AnalisisResponHasil as TujuanAnalisisResponHasil;
 
 class AnalisisCommand extends Command
 {
@@ -62,15 +64,18 @@ class AnalisisCommand extends Command
                     $setConfigId = $cek->id;
                 }
             }
+            $this->info('memulai pemindahan data ...');
             TujuanAnalisisMaster::where('config_id', $setConfigId)->delete();
             TujuanAnalisisKategoriIndikator::where('config_id', $setConfigId)->delete();
             TujuanAnalisisIndikator::where('config_id', $setConfigId)->delete();
             TujuanAnalisisParameter::where('config_id', $setConfigId)->delete();
             TujuanAnalisisKlasifikasi::where('config_id', $setConfigId)->delete();
+            TujuanAnalisisResponBukti::where('config_id', $setConfigId)->delete();
+            TujuanAnalisisResponHasil::where('config_id', $setConfigId)->delete();
             TujuanAnalisisPeriode::where('config_id', $setConfigId)->delete();
             TujuanAnalisisRespon::where('config_id', $setConfigId)->delete();
 
-            $this->info('pindah data AnalisisTipeIndikator');
+            //analisis tipe indikator
             $asalAnalisisTipeIndikator = AsalAnalisisTipeIndikator::all();
             foreach ($asalAnalisisTipeIndikator as $item) {
                 $cek = TujuanAnalisisTipeIndikator::where('id', $item->id)->first();
@@ -78,7 +83,8 @@ class AnalisisCommand extends Command
                     TujuanAnalisisTipeIndikator::create($item->toArray());
                 }
             }
-            $this->info('pindah data AnalisisRefState');
+
+            //analisis Ref state
             $AsalAnalisisRefState = AsalAnalisisRefState::all();
             foreach ($AsalAnalisisRefState as $item) {
                 $cek = TujuanAnalisisRefState::where('id', $item->id)->first();
@@ -86,7 +92,7 @@ class AnalisisCommand extends Command
                     TujuanAnalisisRefState::create($item->toArray());
                 }
             }
-            $this->info('pindah data AnalisisRefSubjek');
+            //analisis Ref Subjek
             $AsalAnalisisRefSubjek = AsalAnalisisRefSubjek::all();
             foreach ($AsalAnalisisRefSubjek as $item) {
                 $cek = TujuanAnalisisRefSubjek::where('id', $item->id)->first();
@@ -100,56 +106,79 @@ class AnalisisCommand extends Command
                     $a->with(['analisisKategoriIndikator']);
                 }, 'analisisKategoriIndikator', 'analisisKlasifikasi', 'analisisPeriode'
             ])->get();
+
+            //analisis Master
             foreach ($data as $asal) {
                 $asalnya = Arr::except($asal->toArray(), ['id']);
                 $asalnya['config_id'] =   $setConfigId;
                 $hasilTujuanAnalisisMaster = TujuanAnalisisMaster::create($asalnya);
-                $this->info('pindah data analisis master');
+
+                //analisis Kategori indikator
                 foreach ($asal->analisisKategoriIndikator ?? [] as $analisisKategoriIndikator) {
                     $isianalisisKategoriIndikator =  Arr::except($analisisKategoriIndikator->toArray(), ['id']);
                     $isianalisisKategoriIndikator['config_id'] =   $setConfigId;
                     $hasilanalisisKategoriIndikator = $hasilTujuanAnalisisMaster->analisisKategoriIndikator()->create($isianalisisKategoriIndikator);
-                    $this->info('pindah data analisisKategoriIndikator');
                 }
+
+                //analisis periode
                 foreach ($asal->analisisPeriode ?? [] as $analisisPeriode) {
-                    $this->info('pindah data analisisPeriode');
                     $isianalisisPeriode = Arr::except($analisisPeriode->toArray(), ['id']);
                     $isianalisisPeriode['config_id'] = $setConfigId;
                     $hasilAnalisisPeriode = $hasilTujuanAnalisisMaster->analisisPeriode()->create($isianalisisPeriode);
                 }
+
+
+                //analisis respon bukti
+                foreach ($asal->analisisResponBukti ?? [] as $analisisResponBukti) {
+                    $isianalisisResponBukti = Arr::except($analisisResponBukti->toArray(), ['id_periode']);
+                    $isianalisisResponBukti['config_id'] = $setConfigId;
+                    $isianalisisResponBukti['id_periode'] = $hasilAnalisisPeriode->id;
+                    $hasilTujuanAnalisisMaster->analisisResponBukti()->create($isianalisisResponBukti);
+                }
+
+                //analisis respon bukti
+                foreach ($asal->analisisResponHasil ?? [] as $analisisResponHasil) {
+                    $isianalisisResponHasil = Arr::except($analisisResponHasil->toArray(), ['id_periode']);
+                    $isianalisisResponHasil['config_id'] = $setConfigId;
+                    $isianalisisResponHasil['id_periode'] = $hasilAnalisisPeriode->id;
+                    $hasilTujuanAnalisisMaster->analisisResponHasil()->create($isianalisisResponHasil);
+                }
+
+                // analisisi indikator
                 foreach ($asal->analisisIndikator ?? [] as $analisisIndikator) {
                     $isianalisisIndikator =  Arr::except($analisisIndikator->toArray(), ['id', 'id_master', 'id_kategori']);
                     $isianalisisIndikator['id_kategori'] = $hasilanalisisKategoriIndikator->id;
                     $isianalisisIndikator['config_id'] =   $setConfigId;
                     $hasilanalisisIndikator = $hasilTujuanAnalisisMaster->analisisIndikator()->create($isianalisisIndikator);
-                    $this->info('pindah data analisisIndikator');
+
+
+                    //analisis parameter
                     foreach ($analisisIndikator->analisisParameter ?? [] as $analisisParameter) {
                         $isianalisisParameter = Arr::except($analisisParameter->toArray(), ['id', 'id_indikator']);
                         $isianalisisParameter['id_indikator'] = $hasilanalisisIndikator->id;
                         $isianalisisParameter['config_id'] = $setConfigId;
                         $hasilanalisisParameter = $hasilanalisisIndikator->analisisParameter()->create($isianalisisParameter);
 
-                        $this->info('pindah data analisisParameter');
-                        foreach ($analisisParameter->analisisRespon ?? [] as $analisisRespon) {
-                            $this->info('pindah data analisisRespon');
-                            $isiAnalisisRespon = $analisisRespon->toArray();
-                            $isiAnalisisRespon['config_id'] = $setConfigId;
-                            $hasilanalisisParameter->analisisRespon()->create($isiAnalisisRespon);
-                        }
+                        //analisis respon
+                        // foreach ($analisisParameter->analisisRespon ?? [] as $analisisRespon) {
+                        //     $this->info('pindah data analisisRespon');
+                        //     $isiAnalisisRespon = Arr::except($analisisRespon->toArray(), ['id_indikator']);
+                        //     // $isiAnalisisRespon['id_indikator'] = $hasilanalisisIndikator->id;
+                        //     $isiAnalisisRespon['config_id'] = $setConfigId;
+                        //     $hasilanalisisParameter->analisisRespon()->create($isiAnalisisRespon);
+                        // }
                     }
-
-
-                    //analisisRespon Ambigu di id_paramater tidak sesuai
-
                 }
 
+                //analisis klasifikasi
                 foreach ($asal->analisisKlasifikasi ?? [] as $analisisKlasifikasi) {
-                    $this->info('pindah data analisisKlasifikasi');
+
                     $isianalisisKlasifikasi = Arr::except($analisisKlasifikasi->toArray(), ['id']);
                     $isianalisisKlasifikasi['config_id'] = $setConfigId;
                     $hasilTujuanAnalisisMaster->analisisKlasifikasi()->create($isianalisisKlasifikasi);
                 }
             }
+            $this->info('pemindahan data selesai...');
         });
     }
 }

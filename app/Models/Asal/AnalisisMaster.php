@@ -89,4 +89,13 @@ class AnalisisMaster extends Model
 	{
 		return $this->hasMany(AnalisisPeriode::class, 'id_master', 'id');
 	}
+
+	public function analisisResponBukti()
+	{
+		return $this->hasMany(AnalisisResponBukti::class, 'id_master', 'id');
+	}
+	public function analisisResponHasil()
+	{
+		return $this->hasMany(AnalisisResponHasil::class, 'id_master', 'id');
+	}
 }
