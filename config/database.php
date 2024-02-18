@@ -39,7 +39,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => '127.0.0.1',
             'port' => 3306,
-            'database' => 'gunu_opendata',
+            'database' => 'desa_3307062020',
             'username' => 'root',
             'password' => '',
             'unix_socket' => env('DB_SOCKET', ''),

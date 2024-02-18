@@ -76,4 +76,8 @@ class TwebKeluarga extends Model
 	{
 		return $this->hasMany(TwebPenduduk::class, 'id_kk');
 	}
+	public function log_keluarga()
+	{
+		return $this->hasMany(LogKeluarga::class, 'id_kk');
+	}
 }

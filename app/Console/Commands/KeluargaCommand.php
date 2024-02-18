@@ -8,6 +8,9 @@ use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
 use App\Models\Tujuan\Dtk;
+use App\Models\Tujuan\LogKeluarga;
+use App\Models\Tujuan\LogPenduduk;
+use App\Models\Tujuan\LogPerubahanPenduduk;
 use App\Models\Tujuan\Pelapak;
 use App\Models\Tujuan\Produk;
 use App\Models\Tujuan\ProdukKategori;
@@ -59,6 +62,7 @@ class KeluargaCommand extends Command
             }
 
             TujuanKeluarga::where('config_id',  $setConfigId)->delete();
+            LogKeluarga::where('config_id',  $setConfigId)->delete();
             TwebPenduduk::where('config_id',  $setConfigId)->delete();
             Dtk::where('config_id',  $setConfigId)->delete();
             TwebRtm::where('config_id',  $setConfigId)->delete();
@@ -67,6 +71,9 @@ class KeluargaCommand extends Command
             ProdukKategori::where('config_id',  $setConfigId)->delete();
             ProgramPesertum::where('config_id',  $setConfigId)->delete();
             Program::where('config_id',  $setConfigId)->delete();
+            LogKeluarga::where('config_id',  $setConfigId)->delete();
+            LogPenduduk::where('config_id',  $setConfigId)->delete();
+            LogPerubahanPenduduk::where('config_id',  $setConfigId)->delete();
             $data = AsalKeluarga::with(['penduduk' => function ($a) {
                 $a->with(['dtks', 'dtks_anggota', 'rtm', 'pelapak' => function ($b) {
                     $b->with(['produks' => function ($c) {
@@ -74,8 +81,8 @@ class KeluargaCommand extends Command
                     }]);
                 }, 'program_peserta'  => function ($c) {
                     $c->with(['program']);
-                }]);
-            }, 'dtks'])->get();
+                }, 'log_penduduk', 'log_perubahan_penduduk']);
+            }, 'dtks', 'log_keluarga'])->get();
 
             foreach ($data as $asal) {
 
@@ -87,7 +94,7 @@ class KeluargaCommand extends Command
                     // echo $a->id."\n";
                     $isidtks = Arr::except($dtks->toArray(), ['id']);
                     $isidtks['config_id'] =  $setConfigId;
-                    // $isidtks['id_keluarga'] =  $a->id;
+                    $isidtks['id_keluarga'] =  $a->id;
 
                     // $this->info('masukkan dtks');
                     $hasildtks = $a->dtks()->create($isidtks);
@@ -163,6 +170,42 @@ class KeluargaCommand extends Command
                     //         $pendu->program_peserta()->create($isianprogrampeserta);
                     //     }
                     // }
+
+                    //masukkan log_penduduk
+                    if ($penduduk->log_penduduk) {
+                        foreach ($penduduk->log_penduduk as $logpenduduk) {
+                            $isianlogpenduduk = Arr::except($logpenduduk->toArray(), ['id', 'id_pend']);
+                            $isianlogpenduduk['config_id'] = $setConfigId;
+                            $isianlogpenduduk['id_pend'] = $pendu->id;
+
+                            $logpen = $pendu->log_penduduk()->create($isianlogpenduduk);
+                        }
+                    }
+
+                    //masukkan log_perubahan_penduduk
+                    if ($penduduk->log_perubahan_penduduk) {
+                        foreach ($penduduk->log_perubahan_penduduk as $logperubahanpenduduk) {
+                            $isianlogperubahanpenduduk = Arr::except($logperubahanpenduduk->toArray(), ['id', 'id_pend']);
+                            $isianlogperubahanpenduduk['config_id'] = $setConfigId;
+                            $isianlogperubahanpenduduk['id_pend'] = $pendu->id;
+
+                            $logpen = $pendu->log_perubahan_penduduk()->create($isianlogperubahanpenduduk);
+                        }
+                    }
+                }
+
+                //masukkan log keluarga
+                if ($asal->log_keluarga) {
+                    foreach ($asal->log_keluarga as $logkelurga) {
+                        // echo $a->id."\n";
+                        $isianlogkeluarga = Arr::except($logkelurga->toArray(), ['id', 'id_kk', 'id_pend', 'id_log_penduduk']);
+                        $isianlogkeluarga['config_id'] =  $setConfigId;
+                        $isianlogkeluarga['id_kk'] =  $a->id;
+                        $isianlogkeluarga['id_pend'] =  $pendu->id ?? null;
+                        $isianlogkeluarga['id_log_penduduk'] =  $logpen->id ?? null;
+
+                        $hasildtks = $a->log_keluarga()->create($isianlogkeluarga);
+                    }
                 }
             }
         });

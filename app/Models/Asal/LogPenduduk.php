@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\Model;
 class LogPenduduk extends Model
 {
 	protected $table = 'log_penduduk';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

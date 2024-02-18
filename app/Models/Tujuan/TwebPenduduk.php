@@ -275,4 +275,8 @@ class TwebPenduduk extends Model
 	{
 		return $this->hasMany(ProgramPesertum::class, 'kartu_id_pend');
 	}
+	public function log_penduduk()
+	{
+		return $this->hasMany(LogPenduduk::class, 'id_pend');
+	}
 }

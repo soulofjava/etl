@@ -44,6 +44,7 @@ use Illuminate\Database\Eloquent\Model;
 class LogPenduduk extends Model
 {
 	protected $table = 'log_penduduk';
+	protected $connection = "tujuan";
 
 	protected $casts = [
 		'config_id' => 'int',
@@ -95,5 +96,10 @@ class LogPenduduk extends Model
 	public function log_keluargas()
 	{
 		return $this->hasMany(LogKeluarga::class, 'id_log_penduduk');
+	}
+
+	public function log_perubahan_penduduk()
+	{
+		return $this->hasMany(LogPerubahanPenduduk::class, 'id_pend');
 	}
 }
