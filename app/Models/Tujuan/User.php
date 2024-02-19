@@ -86,4 +86,9 @@ class User extends Model
 	{
 		return $this->belongsTo(Config::class);
 	}
+
+	public function user_grup()
+	{
+		return $this->hasOne(UserGrup::class, 'id', 'id_grup');
+	}
 }

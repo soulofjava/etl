@@ -256,7 +256,7 @@ class TwebPenduduk extends Model
 
 	public function tweb_penduduk_mandiri()
 	{
-		return $this->hasOne(TwebPendudukMandiri::class, 'id_pend');
+		return $this->hasMany(TwebPendudukMandiri::class, 'id_pend');
 	}
 
 	public function rtm()
@@ -282,5 +282,13 @@ class TwebPenduduk extends Model
 	public function log_perubahan_penduduk()
 	{
 		return $this->hasMany(LogPerubahanPenduduk::class, 'id_pend');
+	}
+	public function twebdesapamong()
+	{
+		return $this->hasOne(TwebDesaPamong::class, 'id_pend');
+	}
+	public function suplemen_terdata()
+	{
+		return $this->hasMany(SuplemenTerdatum::class, 'id_terdata');
 	}
 }

@@ -29,6 +29,7 @@ use Illuminate\Database\Eloquent\Model;
 class RefJabatan extends Model
 {
 	protected $table = 'ref_jabatan';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

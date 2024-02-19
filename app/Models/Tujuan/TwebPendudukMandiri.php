@@ -35,7 +35,7 @@ class TwebPendudukMandiri extends Model
 {
 	protected $table = 'tweb_penduduk_mandiri';
 	protected $primaryKey = 'id_pend';
-	public $incrementing = false;
+	// public $incrementing = false;
 	public $timestamps = false;
 	protected $connection = "tujuan";
 

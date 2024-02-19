@@ -11,6 +11,7 @@ use App\Models\Tujuan\Url as TujuanUrl;
 use App\Models\Tujuan\User as TujuanUser;
 use App\Models\Tujuan\UserGrup as TujuanUserGrup;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 
 class UCommand extends Command
 {
@@ -51,6 +52,7 @@ class UCommand extends Command
             }
         }
 
+        TujuanUrl::where('config_id',  $setConfigId)->delete();
         $this->info('pindah table urls');
         $a = Url::all();
         foreach ($a as $item) {
@@ -59,17 +61,23 @@ class UCommand extends Command
         }
 
         $this->info('pindah table user');
-        $a = User::all();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanUser::create($item->toArray());
-        }
 
-        $this->info('pindah table user_grup');
-        $a = UserGrup::all();
+        TujuanUser::where('config_id',  $setConfigId)->delete();
+        TujuanUserGrup::where('config_id',  $setConfigId)->delete();
+        $a = User::with(['user_grup'])->get();
         foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanUserGrup::create($item->toArray());
+            if ($item->pamong_id == "") {
+                if ($item->user_grup) {
+                    $isianusergrup = Arr::except($item->user_grup->toArray(), ['id']);
+                    $isianusergrup['config_id'] = $setConfigId;
+                    $grup = TujuanUserGrup::firstOrCreate($isianusergrup);
+
+                    $item = Arr::except($item->toArray(), ['id', 'id_grup']);
+                    $item['config_id'] = $setConfigId;
+                    $item['id_grup'] = $grup->id;
+                    TujuanUser::create($item);
+                }
+            }
         }
     }
 }

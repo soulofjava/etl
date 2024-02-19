@@ -16,7 +16,12 @@ use App\Models\Tujuan\Produk;
 use App\Models\Tujuan\ProdukKategori;
 use App\Models\Tujuan\Program;
 use App\Models\Tujuan\ProgramPesertum;
+use App\Models\Tujuan\RefJabatan;
+use App\Models\Tujuan\Supleman;
+use App\Models\Tujuan\SuplemenTerdatum;
+use App\Models\Tujuan\TwebDesaPamong;
 use App\Models\Tujuan\TwebPenduduk;
+use App\Models\Tujuan\TwebPendudukMandiri;
 use App\Models\Tujuan\TwebRtm;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -74,14 +79,23 @@ class KeluargaCommand extends Command
             LogKeluarga::where('config_id',  $setConfigId)->delete();
             LogPenduduk::where('config_id',  $setConfigId)->delete();
             LogPerubahanPenduduk::where('config_id',  $setConfigId)->delete();
+            TwebDesaPamong::where('config_id',  $setConfigId)->delete();
+            RefJabatan::where('config_id',  $setConfigId)->delete();
+            Supleman::where('config_id',  $setConfigId)->delete();
+            SuplemenTerdatum::where('config_id',  $setConfigId)->delete();
+            TwebPendudukMandiri::where('config_id',  $setConfigId)->delete();
             $data = AsalKeluarga::with(['penduduk' => function ($a) {
                 $a->with(['dtks', 'dtks_anggota', 'rtm', 'pelapak' => function ($b) {
                     $b->with(['produks' => function ($c) {
                         $c->with(['produk_kategori']);
                     }]);
-                }, 'program_peserta'  => function ($c) {
-                    $c->with(['program']);
-                }, 'log_penduduk', 'log_perubahan_penduduk']);
+                }, 'program_peserta'  => function ($e) {
+                    $e->with(['program']);
+                }, 'log_penduduk', 'log_perubahan_penduduk', 'twebdesapamong' => function ($f) {
+                    $f->with(['refjabatan']);
+                }, 'suplemen_terdata' => function ($h) {
+                    $h->with(['supleman']);
+                }, 'tweb_penduduk_mandiri']);
             }, 'dtks', 'log_keluarga'])->get();
 
             foreach ($data as $asal) {
@@ -189,7 +203,46 @@ class KeluargaCommand extends Command
                             $isianlogperubahanpenduduk['config_id'] = $setConfigId;
                             $isianlogperubahanpenduduk['id_pend'] = $pendu->id;
 
-                            $logpen = $pendu->log_perubahan_penduduk()->create($isianlogperubahanpenduduk);
+                            $logpenper = $pendu->log_perubahan_penduduk()->create($isianlogperubahanpenduduk);
+                        }
+                    }
+
+                    // masukkan tweb_desa_pamong
+                    if ($penduduk->twebdesapamong) {
+                        $isianrefjabatan = Arr::except($penduduk->twebdesapamong->refjabatan->toArray(), ['id']);
+                        $isianrefjabatan['config_id'] = $setConfigId;
+                        $jab = RefJabatan::firstOrCreate($isianrefjabatan);
+
+                        $isiantwebdesapamong = Arr::except($penduduk->twebdesapamong->toArray(), ['id_pend', 'id', 'atasan', 'jabatan_id']);
+                        $isiantwebdesapamong['config_id'] = $setConfigId;
+                        $isiantwebdesapamong['id_pend'] = $pendu->id;
+                        $isiantwebdesapamong['jabatan_id'] = $jab->id;
+                        $pela = $pendu->twebdesapamong()->create($isiantwebdesapamong);
+                    }
+
+                    // masukkan suplemen_terdata
+                    if ($penduduk->suplemen_terdata) {
+                        foreach ($penduduk->suplemen_terdata as $super) {
+                            $isiansuplemen = Arr::except($super->supleman->toArray(), ['id']);
+                            $isiansuplemen['config_id'] = $setConfigId;
+                            $suplemen = Supleman::firstOrCreate($isiansuplemen);
+
+                            $isiansuplemen_terdata = Arr::except($super->toArray(), ['id_terdata', 'id', 'id_suplemen']);
+                            $isiansuplemen_terdata['config_id'] = $setConfigId;
+                            $isiansuplemen_terdata['id_terdata'] = $pendu->id;
+                            $isiansuplemen_terdata['id_suplemen'] = $suplemen->id;
+                            $pela = $pendu->suplemen_terdata()->create($isiansuplemen_terdata);
+                        }
+                    }
+
+                    //masukkan tweb_penduduk_mandiri
+                    if ($penduduk->tweb_penduduk_mandiri) {
+                        foreach ($penduduk->tweb_penduduk_mandiri as $twebpendudukmandiri) {
+                            $isiantwebpendudukmandiri = Arr::except($twebpendudukmandiri->toArray(), ['id', 'id_pend']);
+                            $isiantwebpendudukmandiri['config_id'] = $setConfigId;
+                            $isiantwebpendudukmandiri['id_pend'] = $pendu->id;
+
+                            $pendu->tweb_penduduk_mandiri()->create($isiantwebpendudukmandiri);
                         }
                     }
                 }

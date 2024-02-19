@@ -128,4 +128,8 @@ class TwebDesaPamong extends Model
 	{
 		return $this->hasMany(DisposisiSuratMasuk::class, 'id_desa_pamong');
 	}
+	public function refjabatan()
+	{
+		return $this->belongsTo(RefJabatan::class, 'jabatan_id');
+	}
 }
