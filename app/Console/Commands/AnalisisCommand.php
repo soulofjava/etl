@@ -24,6 +24,7 @@ use App\Models\Asal\AnalisisRespon as AsalAnalisisRespon;
 use App\Models\Tujuan\AnalisisRespon as TujuanAnalisisRespon;
 use App\Models\Tujuan\AnalisisResponBukti as TujuanAnalisisResponBukti;
 use App\Models\Tujuan\AnalisisResponHasil as TujuanAnalisisResponHasil;
+use App\Models\Tujuan\AnalisisPartisipasi as TujuanAnalisisPartisipasi;
 
 class AnalisisCommand extends Command
 {
@@ -74,6 +75,7 @@ class AnalisisCommand extends Command
             TujuanAnalisisResponHasil::where('config_id', $setConfigId)->delete();
             TujuanAnalisisPeriode::where('config_id', $setConfigId)->delete();
             TujuanAnalisisRespon::where('config_id', $setConfigId)->delete();
+            TujuanAnalisisPartisipasi::where('config_id', $setConfigId)->delete();
 
             //analisis tipe indikator
             $asalAnalisisTipeIndikator = AsalAnalisisTipeIndikator::all();
