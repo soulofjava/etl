@@ -63,4 +63,12 @@ class AnalisisIndikator extends Model
 	{
 		return $this->belongsTo(Config::class);
 	}
+	public function analisisParameter()
+	{
+		return $this->hasMany(AnalisisParameter::class, 'id_indikator', 'id');
+	}
+	public function analisisRespon()
+	{
+		return $this->hasMany(AnalisisRespon::class, 'id_indikator', 'id');
+	}
 }
