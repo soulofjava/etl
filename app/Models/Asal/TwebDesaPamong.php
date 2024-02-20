@@ -132,4 +132,9 @@ class TwebDesaPamong extends Model
 	{
 		return $this->belongsTo(RefJabatan::class, 'jabatan_id');
 	}
+
+	public function user()
+	{
+		return $this->hasOne(User::class, 'pamong_id');
+	}
 }

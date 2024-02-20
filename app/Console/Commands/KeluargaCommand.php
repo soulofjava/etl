@@ -23,6 +23,7 @@ use App\Models\Tujuan\TwebDesaPamong;
 use App\Models\Tujuan\TwebPenduduk;
 use App\Models\Tujuan\TwebPendudukMandiri;
 use App\Models\Tujuan\TwebRtm;
+use App\Models\Tujuan\UserGrup;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -92,7 +93,9 @@ class KeluargaCommand extends Command
                 }, 'program_peserta'  => function ($e) {
                     $e->with(['program']);
                 }, 'log_penduduk', 'log_perubahan_penduduk', 'twebdesapamong' => function ($f) {
-                    $f->with(['refjabatan']);
+                    $f->with(['refjabatan', 'user' => function ($i) {
+                        $i->with(['user_grup']);
+                    }]);
                 }, 'suplemen_terdata' => function ($h) {
                     $h->with(['supleman']);
                 }, 'tweb_penduduk_mandiri']);
@@ -166,24 +169,27 @@ class KeluargaCommand extends Command
                         }
                     }
 
-                    // // masukkan program_peserta
-                    // if ($penduduk->program_peserta) {
-                    //     foreach ($penduduk->program_peserta as $programpeserta) {
-                    //         // Extract fields from the associated program, excluding 'id'
-                    //         $isianprogram = Arr::except($programpeserta->program->toArray(), ['id']);
-                    //         $isianprogram['config_id'] = $setConfigId;
-                    //         $prog = Program::firstOrCreate($isianprogram);
+                    // masukkan program_peserta
+                    if ($penduduk->program_peserta) {
+                        foreach ($penduduk->program_peserta as $programpeserta) {
+                            // Extract fields from the associated program, excluding 'id'
+                            $prog = Program::where('config_id',  $setConfigId)->where('nama', $programpeserta->program->nama)->first();
+                            if ($prog == null) {
+                                $isianprogram = Arr::except($programpeserta->program->toArray(), ['id']);
+                                $isianprogram['config_id'] = $setConfigId;
+                                $prog = Program::firstOrCreate($isianprogram);
+                            }
 
-                    //         // Extract fields from the program_peserta, excluding 'kartu_id_pend', 'program_id', and 'id'
-                    //         $isianprogrampeserta = Arr::except($programpeserta->toArray(), ['kartu_id_pend', 'program_id', 'id']);
-                    //         $isianprogrampeserta['config_id'] = $setConfigId;
-                    //         $isianprogrampeserta['kartu_id_pend'] = $pendu->id;
-                    //         $isianprogrampeserta['program_id'] = $prog->id;
+                            // Extract fields from the program_peserta, excluding 'kartu_id_pend', 'program_id', and 'id'
+                            $isianprogrampeserta = Arr::except($programpeserta->toArray(), ['kartu_id_pend', 'program_id', 'id']);
+                            $isianprogrampeserta['config_id'] = $setConfigId;
+                            $isianprogrampeserta['kartu_id_pend'] = $pendu->id;
+                            $isianprogrampeserta['program_id'] = $prog->id;
 
-                    //         // Create a new program_peserta associated with the current $pendu object
-                    //         $pendu->program_peserta()->create($isianprogrampeserta);
-                    //     }
-                    // }
+                            // Create a new program_peserta associated with the current $pendu object
+                            $pendu->program_peserta()->create($isianprogrampeserta);
+                        }
+                    }
 
                     //masukkan log_penduduk
                     if ($penduduk->log_penduduk) {
@@ -217,7 +223,25 @@ class KeluargaCommand extends Command
                         $isiantwebdesapamong['config_id'] = $setConfigId;
                         $isiantwebdesapamong['id_pend'] = $pendu->id;
                         $isiantwebdesapamong['jabatan_id'] = $jab->id;
-                        $pela = $pendu->twebdesapamong()->create($isiantwebdesapamong);
+                        $pamo = $pendu->twebdesapamong()->create($isiantwebdesapamong);
+
+                        //masukkan user dan user_grup
+                        if ($penduduk->twebdesapamong->user) {
+                            $isianusergrup = UserGrup::where('config_id',  $setConfigId)->where('slug', $penduduk->twebdesapamong->user->user_grup->slug)->first();
+                            if ($isianusergrup == null) {
+                                $isianusergrup = Arr::except($penduduk->twebdesapamong->user->user_grup->toArray(), ['id', 'slug']);
+                                $isianusergrup['config_id'] = $setConfigId;
+                                $isianusergrup = UserGrup::firstOrCreate($isianusergrup);
+                            }
+
+                            $isianuser = Arr::except($penduduk->twebdesapamong->user->toArray(), ['id', 'id_grup']);
+                            $isianuser['config_id'] = $setConfigId;
+                            $isianuser['id_grup'] = $isianusergrup->id;
+                            $isianuser['pamong_id'] = $pamo->id;
+                            $pendu->twebdesapamong->user()->create($isianuser);
+
+
+                        }
                     }
 
                     // masukkan suplemen_terdata

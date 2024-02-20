@@ -68,9 +68,12 @@ class UCommand extends Command
         foreach ($a as $item) {
             if ($item->pamong_id == "") {
                 if ($item->user_grup) {
-                    $isianusergrup = Arr::except($item->user_grup->toArray(), ['id']);
-                    $isianusergrup['config_id'] = $setConfigId;
-                    $grup = TujuanUserGrup::firstOrCreate($isianusergrup);
+                    $grup = TujuanUserGrup::where('config_id',  $setConfigId)->where('slug', $item->user_grup->slug)->first();
+                    if ($grup == null) {
+                        $isianusergrup = Arr::except($item->user_grup->toArray(), ['id', 'slug']);
+                        $isianusergrup['config_id'] = $setConfigId;
+                        $grup = TujuanUserGrup::firstOrCreate($isianusergrup);
+                    }
 
                     $item = Arr::except($item->toArray(), ['id', 'id_grup']);
                     $item['config_id'] = $setConfigId;
