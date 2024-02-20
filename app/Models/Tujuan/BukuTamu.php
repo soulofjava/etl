@@ -56,4 +56,8 @@ class BukuTamu extends Model
 	{
 		return $this->belongsTo(Config::class);
 	}
+	public function bukuKepuasan()
+	{
+		return $this->belongsTo(BukuKepuasan::class, 'id', 'id_nama');
+	}
 }
