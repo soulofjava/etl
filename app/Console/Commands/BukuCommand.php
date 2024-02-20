@@ -62,7 +62,6 @@ class BukuCommand extends Command
             TujuanBukuPertanyaan::where('config_id', $setConfigId)->delete();
 
             $bukuKeperluan = AsalBukuKeperluan::get();
-            $this->info($bukuKeperluan);
             foreach ($bukuKeperluan as $asalBukuKeperluan) {
                 $isianBukuKeperluan =  Arr::except($asalBukuKeperluan->toArray(), ['id']);
                 TujuanBukuKeperluan::create($isianBukuKeperluan);
