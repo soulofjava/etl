@@ -75,7 +75,7 @@ class AnalisisCommand extends Command
             TujuanAnalisisResponHasil::where('config_id', $setConfigId)->delete();
             TujuanAnalisisPeriode::where('config_id', $setConfigId)->delete();
             TujuanAnalisisRespon::where('config_id', $setConfigId)->delete();
-            TujuanAnalisisPartisipasi::where('config_id', $setConfigId)->delete();
+            // TujuanAnalisisPartisipasi::where('config_id', $setConfigId)->delete();
 
             //analisis tipe indikator
             $asalAnalisisTipeIndikator = AsalAnalisisTipeIndikator::all();
@@ -162,13 +162,13 @@ class AnalisisCommand extends Command
                         $hasilanalisisParameter = $hasilanalisisIndikator->analisisParameter()->create($isianalisisParameter);
 
                         //analisis respon
-                        // foreach ($analisisParameter->analisisRespon ?? [] as $analisisRespon) {
-                        //     $this->info('pindah data analisisRespon');
-                        //     $isiAnalisisRespon = Arr::except($analisisRespon->toArray(), ['id_indikator']);
-                        //     // $isiAnalisisRespon['id_indikator'] = $hasilanalisisIndikator->id;
-                        //     $isiAnalisisRespon['config_id'] = $setConfigId;
-                        //     $hasilanalisisParameter->analisisRespon()->create($isiAnalisisRespon);
-                        // }
+                        foreach ($analisisParameter->analisisRespon ?? [] as $analisisRespon) {
+                            $this->info('pindah data analisisRespon');
+                            $isiAnalisisRespon = $analisisRespon->toArray();
+                            // $isiAnalisisRespon['id_indikator'] = $hasilanalisisIndikator->id;
+                            $isiAnalisisRespon['config_id'] = $setConfigId;
+                            $hasilanalisisParameter->analisisRespon()->create($isiAnalisisRespon);
+                        }
                     }
                 }
 
