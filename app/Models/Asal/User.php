@@ -90,4 +90,9 @@ class User extends Model
 	{
 		return $this->hasOne(UserGrup::class, 'id', 'id_grup');
 	}
+
+	public function artikel()
+	{
+		return $this->hasMany(Artikel::class, 'id_user');
+	}
 }

@@ -7,6 +7,7 @@
 namespace App\Models\Tujuan;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class Kategori
@@ -51,5 +52,39 @@ class Kategori extends Model
 	public function config()
 	{
 		return $this->belongsTo(Config::class);
+	}
+
+	public function generateSlug()
+	{
+		$baseSlug = Str::slug($this->kategori);
+		$slug = $baseSlug;
+		$count = 1;
+
+		while ($this->slugExists($slug, $this->id)) {
+			$slug = $baseSlug . '-' . $count;
+			$count++;
+		}
+
+		$this->slug = $slug;
+	}
+
+	private function slugExists($slug, $currentId = null)
+	{
+		$query = static::where('slug', $slug);
+
+		if ($currentId !== null) {
+			$query->where('id', '!=', $currentId);
+		}
+
+		return $query->exists();
+	}
+
+	protected static function boot()
+	{
+		parent::boot();
+
+		static::creating(function ($post) {
+			$post->generateSlug();
+		});
 	}
 }

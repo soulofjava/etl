@@ -88,4 +88,9 @@ class Artikel extends Model
 	{
 		return $this->hasMany(User::class, 'id_user');
 	}
+
+	public function kategori()
+	{
+		return $this->belongsTo(Kategori::class, 'id_kategori');
+	}
 }

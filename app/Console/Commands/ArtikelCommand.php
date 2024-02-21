@@ -5,12 +5,12 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Asal\Config;
 use App\Models\Tujuan\Config as TujuanConfig;
-use DB;
 use Illuminate\Support\Arr;
 use App\Models\Asal\Artikel as AsalArtikel;
 use App\Models\Tujuan\Agenda as TujuanAgenda;
 use App\Models\Tujuan\Artikel as TujuanArtikel;
 use App\Models\Tujuan\Kategori as TujuanKategori;
+use Illuminate\Support\Facades\DB;
 
 class ArtikelCommand extends Command
 {
