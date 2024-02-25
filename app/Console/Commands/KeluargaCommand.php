@@ -8,6 +8,7 @@ use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
 use App\Models\Tujuan\Dtk;
+use App\Models\Tujuan\Kategori;
 use App\Models\Tujuan\LogKeluarga;
 use App\Models\Tujuan\LogPenduduk;
 use App\Models\Tujuan\LogPerubahanPenduduk;
@@ -94,7 +95,9 @@ class KeluargaCommand extends Command
                     $e->with(['program']);
                 }, 'log_penduduk', 'log_perubahan_penduduk', 'twebdesapamong' => function ($f) {
                     $f->with(['refjabatan', 'user' => function ($i) {
-                        $i->with(['user_grup']);
+                        $i->with(['user_grup', 'artikel' => function ($j) {
+                            $j->with(['kategori']);
+                        }]);
                     }]);
                 }, 'suplemen_terdata' => function ($h) {
                     $h->with(['supleman']);
@@ -238,9 +241,27 @@ class KeluargaCommand extends Command
                             $isianuser['config_id'] = $setConfigId;
                             $isianuser['id_grup'] = $isianusergrup->id;
                             $isianuser['pamong_id'] = $pamo->id;
-                            $pendu->twebdesapamong->user()->create($isianuser);
+                            $user = $pendu->twebdesapamong->user()->create($isianuser);
 
+                            // masukkan artikel
+                            if ($penduduk->twebdesapamong->user->artikel) {
+                                foreach ($penduduk->twebdesapamong->user->artikel as $arti) {
+                                    if ($arti->kategori) {
+                                        $kate = Kategori::where('config_id',  $setConfigId)->where('slug', $arti->kategori->slug)->first();
+                                        if ($kate == null) {
+                                            $isiankategori = Arr::except($arti->kategori->toArray(), ['id', 'slug']);
+                                            $isiankategori['config_id'] = $setConfigId;
+                                            $kate = Kategori::firstOrCreate($isiankategori);
+                                        }
+                                    }
 
+                                    $isianartikel = Arr::except($arti->toArray(), ['id', 'slug', 'id_kategori', 'id_user']);
+                                    $isianartikel['config_id'] = $setConfigId;
+                                    $isianartikel['id_user'] = $user->id;
+                                    $isianartikel['id_kategori'] = $kate->id ?? '999';
+                                    $user->artikel()->create($isianartikel);
+                                }
+                            }
                         }
                     }
 
