@@ -101,4 +101,9 @@ class TwebSuratFormat extends Model
 	{
 		return $this->belongsTo(Config::class);
 	}
+
+	public function log_surat()
+	{
+		return $this->hasMany(LogSurat::class, 'id_format_surat');
+	}
 }
