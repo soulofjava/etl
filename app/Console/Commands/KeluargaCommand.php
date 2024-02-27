@@ -26,6 +26,7 @@ use App\Models\Tujuan\TwebPendudukMandiri;
 use App\Models\Tujuan\TwebRtm;
 use App\Models\Tujuan\UserGrup;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 class KeluargaCommand extends Command
@@ -76,8 +77,8 @@ class KeluargaCommand extends Command
             Pelapak::where('config_id',  $setConfigId)->delete();
             Produk::where('config_id',  $setConfigId)->delete();
             ProdukKategori::where('config_id',  $setConfigId)->delete();
-            ProgramPesertum::where('config_id',  $setConfigId)->delete();
-            Program::where('config_id',  $setConfigId)->delete();
+            // ProgramPesertum::where('config_id',  $setConfigId)->delete();
+            // Program::where('config_id',  $setConfigId)->delete();
             LogKeluarga::where('config_id',  $setConfigId)->delete();
             LogPenduduk::where('config_id',  $setConfigId)->delete();
             LogPerubahanPenduduk::where('config_id',  $setConfigId)->delete();
@@ -173,26 +174,26 @@ class KeluargaCommand extends Command
                     }
 
                     // masukkan program_peserta
-                    if ($penduduk->program_peserta) {
-                        foreach ($penduduk->program_peserta as $programpeserta) {
-                            // Extract fields from the associated program, excluding 'id'
-                            $prog = Program::where('config_id',  $setConfigId)->where('nama', $programpeserta->program->nama)->first();
-                            if ($prog == null) {
-                                $isianprogram = Arr::except($programpeserta->program->toArray(), ['id']);
-                                $isianprogram['config_id'] = $setConfigId;
-                                $prog = Program::firstOrCreate($isianprogram);
-                            }
+                    // if ($penduduk->program_peserta) {
+                    //     foreach ($penduduk->program_peserta as $programpeserta) {
+                    //         // Extract fields from the associated program, excluding 'id'
+                    //         $prog = Program::where('config_id',  $setConfigId)->where('nama', $programpeserta->program->nama)->first();
+                    //         if ($prog == null) {
+                    //             $isianprogram = Arr::except($programpeserta->program->toArray(), ['id']);
+                    //             $isianprogram['config_id'] = $setConfigId;
+                    //             $prog = Program::firstOrCreate($isianprogram);
+                    //         }
 
-                            // Extract fields from the program_peserta, excluding 'kartu_id_pend', 'program_id', and 'id'
-                            $isianprogrampeserta = Arr::except($programpeserta->toArray(), ['kartu_id_pend', 'program_id', 'id']);
-                            $isianprogrampeserta['config_id'] = $setConfigId;
-                            $isianprogrampeserta['kartu_id_pend'] = $pendu->id;
-                            $isianprogrampeserta['program_id'] = $prog->id;
+                    //         // Extract fields from the program_peserta, excluding 'kartu_id_pend', 'program_id', and 'id'
+                    //         $isianprogrampeserta = Arr::except($programpeserta->toArray(), ['kartu_id_pend', 'program_id', 'id']);
+                    //         $isianprogrampeserta['config_id'] = $setConfigId;
+                    //         $isianprogrampeserta['kartu_id_pend'] = $pendu->id;
+                    //         $isianprogrampeserta['program_id'] = $prog->id;
 
-                            // Create a new program_peserta associated with the current $pendu object
-                            $pendu->program_peserta()->create($isianprogrampeserta);
-                        }
-                    }
+                    //         // Create a new program_peserta associated with the current $pendu object
+                    //         $pendu->program_peserta()->create($isianprogrampeserta);
+                    //     }
+                    // }
 
                     //masukkan log_penduduk
                     if ($penduduk->log_penduduk) {
@@ -307,5 +308,8 @@ class KeluargaCommand extends Command
                 }
             }
         });
+        Artisan::call('app:analisis-command');
+        Artisan::call('app:keuangan-command');
+        Artisan::call('app:group-akses-command');
     }
 }
