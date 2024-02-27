@@ -8,7 +8,7 @@ use App\Models\Asal\Config;
 use Illuminate\Support\Facades\DB;
 use App\Models\Asal\GrupAkse as AsalGrupAkse;
 use App\Models\Asal\UserGrup as AsalUserGrup;
-use App\Models\Asal\UserGrup as TujuanUserGrup;
+use App\Models\Tujuan\UserGrup as TujuanUserGrup;
 use App\Models\Asal\SettingModul as AsalSettingModul;
 use App\Models\Tujuan\GrupAkse as TujuanGrupAkse;
 use App\Models\Tujuan\SettingModul as TujuanSettingModul;
@@ -74,7 +74,9 @@ class GroupAksesCommand extends Command
                     $asalnyamodul = Arr::except($a->toArray(), ['id']);
                     // print_r($asalnyamodul);
                     $asalnyamodul['config_id'] = $setConfigId;
+                    $asalnyamodul['old_value'] = $a->id;
                     $hasilmodul = TujuanSettingModul::create($asalnyamodul);
+
                     // array_push($b, ['asli' => $a->id, 'hasil' => $hasilmodul->id]);
                     // AsalGrupAkse::where('id_modul', $a->id)->update(['id_modul' => $a->id]);
                     // $this->info('line 73');
@@ -105,7 +107,7 @@ class GroupAksesCommand extends Command
                 echo $setConfigId;
                 $ajk =  TujuanUserGrup::where('config_id', $setConfigId)->where('nama', $asuu->nama)->first();
                 $this->info("line 105");
-                if ($ajk ?? "" === "") {
+                if (!$ajk) {
                     $this->info("line 111");
                     $asalnyamodul = Arr::except($asuu->toArray(), ['id', 'slug']);
                     $asalnyamodul['config_id'] = $setConfigId;
@@ -117,13 +119,18 @@ class GroupAksesCommand extends Command
 
             $AsalGrupAkse = AsalGrupAkse::get();
             foreach ($AsalGrupAkse as $bm) {
+                echo "a" . $bm->id_modul;
                 $asalnyamodul = Arr::except($bm->toArray(), ['id']);
                 $asalusergrup = AsalUserGrup::where('id', $bm->id_grup)->first();
+                // print_r($asalusergrup->nama ?? 'asu');
                 $idgroup = TujuanUserGrup::where('config_id', $setConfigId)->where('nama', $asalusergrup->nama)->first();
+
                 $tujuanidmodul = TujuanSettingModul::where('old_value', $bm->id_modul)->first();
+                // dd($tujuanidmodul->id);
+
                 TujuanGrupAkse::create([
                     'config_id' => $setConfigId,
-                    'id_group' =>  $idgroup->id,
+                    'id_grup' =>  $idgroup->id,
                     'id_modul' => $tujuanidmodul->id,
                     'akses' => $bm->akses
                 ]);

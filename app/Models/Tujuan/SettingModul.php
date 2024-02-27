@@ -36,29 +36,7 @@ class SettingModul extends Model
 	public $timestamps = false;
 	protected $connection = "tujuan";
 
-	protected $casts = [
-		'config_id' => 'int',
-		'aktif' => 'bool',
-		'urut' => 'int',
-		'level' => 'bool',
-		'hidden' => 'bool',
-		'parent' => 'int'
-	];
-
-	protected $fillable = [
-		'config_id',
-		'modul',
-		'slug',
-		'url',
-		'aktif',
-		'ikon',
-		'urut',
-		'level',
-		'hidden',
-		'ikon_kecil',
-		'parent'
-	];
-
+	protected $guarded = [];
 	public function config()
 	{
 		return $this->belongsTo(Config::class);
