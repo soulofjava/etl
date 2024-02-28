@@ -311,5 +311,7 @@ class KeluargaCommand extends Command
         Artisan::call('app:analisis-command');
         Artisan::call('app:keuangan-command');
         Artisan::call('app:group-akses-command');
+        Artisan::call('app:u-command');
+        Artisan::call('app:m-command');
     }
 }
