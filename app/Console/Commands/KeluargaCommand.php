@@ -28,6 +28,7 @@ use App\Models\Tujuan\UserGrup;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use App\Models\Tujuan\User;
 
 class KeluargaCommand extends Command
 {
@@ -69,24 +70,146 @@ class KeluargaCommand extends Command
                 }
             }
 
-            TujuanKeluarga::where('config_id',  $setConfigId)->delete();
-            LogKeluarga::where('config_id',  $setConfigId)->delete();
-            TwebPenduduk::where('config_id',  $setConfigId)->delete();
-            Dtk::where('config_id',  $setConfigId)->delete();
-            TwebRtm::where('config_id',  $setConfigId)->delete();
-            Pelapak::where('config_id',  $setConfigId)->delete();
-            Produk::where('config_id',  $setConfigId)->delete();
-            ProdukKategori::where('config_id',  $setConfigId)->delete();
-            // ProgramPesertum::where('config_id',  $setConfigId)->delete();
-            // Program::where('config_id',  $setConfigId)->delete();
-            LogKeluarga::where('config_id',  $setConfigId)->delete();
-            LogPenduduk::where('config_id',  $setConfigId)->delete();
-            LogPerubahanPenduduk::where('config_id',  $setConfigId)->delete();
-            TwebDesaPamong::where('config_id',  $setConfigId)->delete();
-            RefJabatan::where('config_id',  $setConfigId)->delete();
-            Supleman::where('config_id',  $setConfigId)->delete();
-            SuplemenTerdatum::where('config_id',  $setConfigId)->delete();
-            TwebPendudukMandiri::where('config_id',  $setConfigId)->delete();
+            $this->info('mulai hapus TujuanKeluarga');
+            $zz =    TujuanKeluarga::where('config_id',  $setConfigId)->delete();
+            if($zz) {
+                $this->info('hapus TujuanKeluarga berhasil');
+               } else {
+                $this->info('hapus TujuanKeluarga gagal');
+               }
+
+            $this->info('hapus LogKeluarga');
+            $zz =  LogKeluarga::where('config_id',  $setConfigId)->delete();
+            if($zz) {
+                $this->info('hapus LogKeluarga berhasil');
+               } else {
+                $this->info('hapus LogKeluarga gagal');
+               }
+
+
+            $this->info('hapus TwebPenduduk');
+            $zz =  TwebPenduduk::where('config_id',  $setConfigId)->delete();
+            if($zz) {
+                $this->info('hapus TwebPenduduk berhasil');
+               } else {
+                $this->info('hapus TwebPenduduk gagal');
+               }
+
+
+            $this->info('hapus TwebRtm');
+           $zz = TwebRtm::where('config_id',  $setConfigId)->delete();
+           if($zz) {
+            $this->info('hapus TwebRtm berhasil');
+           } else {
+            $this->info('hapus TwebRtm gagal');
+           }
+         
+           $this->info('mulai hapus Dtk');
+            $zz = Dtk::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus Dtk berhasil');
+            } else {
+                $this->info('hapus Dtk gagal');
+            }
+            $this->info('mulai hapus Pelapak');
+            $zz = Pelapak::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus Pelapak berhasil');
+            } else {
+                $this->info('hapus Pelapak gagal');
+            }
+            $this->info('mulai hapus Produk');
+            $zz = Produk::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus Produk berhasil');
+            } else {
+                $this->info('hapus Produk gagal');
+            }
+            $this->info('mulai hapus ProdukKategori');
+            $zz = ProdukKategori::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus ProdukKategori berhasil');
+            } else {
+                $this->info('hapus ProdukKategori gagal');
+            }
+            // $this->info('mulai hapus param');
+            // $zz = // ProgramPesertum::where('config_id',  $setConfigId)->delete();
+            // if($zz){
+            //     $this->info('hapus param berhasil');
+            // } else {
+            //     $this->info('hapus param gagal');
+            // }
+            // $this->info('mulai hapus param');
+            // $zz = // Program::where('config_id',  $setConfigId)->delete();
+            // if($zz){
+            //     $this->info('hapus param berhasil');
+            // } else {
+            //     $this->info('hapus param gagal');
+            // }
+            $this->info('mulai hapus LogKeluarga');
+            $zz = LogKeluarga::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus LogKeluarga berhasil');
+            } else {
+                $this->info('hapus LogKeluarga gagal');
+            }
+            $this->info('mulai hapus LogPenduduk');
+            $zz = LogPenduduk::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus LogPenduduk berhasil');
+            } else {
+                $this->info('hapus LogPenduduk gagal');
+            }
+            $this->info('mulai hapus LogPerubahanPenduduk');
+            $zz = LogPerubahanPenduduk::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus LogPerubahanPenduduk berhasil');
+            } else {
+                $this->info('hapus LogPerubahanPenduduk gagal');
+            }
+            $this->info('mulai hapus TwebDesaPamong');
+            $zz = TwebDesaPamong::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus TwebDesaPamong berhasil');
+            } else {
+                $this->info('hapus TwebDesaPamong gagal');
+            }
+            $this->info('mulai hapus RefJabatan');
+            $zz = RefJabatan::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus RefJabatan berhasil');
+            } else {
+                $this->info('hapus RefJabatan gagal');
+            }
+            $this->info('mulai hapus Supleman');
+            $zz = Supleman::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus Supleman berhasil');
+            } else {
+                $this->info('hapus Supleman gagal');
+            }
+            $this->info('mulai hapus SuplemenTerdatum');
+            $zz = SuplemenTerdatum::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus SuplemenTerdatum berhasil');
+            } else {
+                $this->info('hapus SuplemenTerdatum gagal');
+            }
+            $this->info('mulai hapus TwebPendudukMandiri');
+            $zz = TwebPendudukMandiri::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus TwebPendudukMandiri berhasil');
+            } else {
+                $this->info('hapus TwebPendudukMandiri gagal');
+            }
+            
+            $this->info('mulai hapus user');
+            $zz = User::where('config_id',  $setConfigId)->delete();
+            if($zz){
+                $this->info('hapus user berhasil');
+            } else {
+                $this->info('hapus user gagal');
+            }
             $data = AsalKeluarga::with(['penduduk' => function ($a) {
                 $a->with(['dtks', 'dtks_anggota', 'rtm', 'pelapak' => function ($b) {
                     $b->with(['produks' => function ($c) {
@@ -308,10 +431,15 @@ class KeluargaCommand extends Command
                 }
             }
         });
+        $this->info('panggil analisis command');
         Artisan::call('app:analisis-command');
+        $this->info('panggil keuangan command');
         Artisan::call('app:keuangan-command');
+        $this->info('panggil group-akses command');
         Artisan::call('app:group-akses-command');
+        $this->info('panggil u command');
         Artisan::call('app:u-command');
+        $this->info('panggil m command');
         Artisan::call('app:m-command');
     }
 }
