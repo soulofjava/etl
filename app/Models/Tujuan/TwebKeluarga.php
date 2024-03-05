@@ -80,4 +80,9 @@ class TwebKeluarga extends Model
 	{
 		return $this->hasMany(LogKeluarga::class, 'id_kk');
 	}
+
+	public function rtm()
+	{
+		return $this->hasOne(TwebRtm::class, 'id_rtm');
+	}
 }

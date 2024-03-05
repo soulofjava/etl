@@ -72,62 +72,62 @@ class KeluargaCommand extends Command
 
             $this->info('mulai hapus TujuanKeluarga');
             $zz =    TujuanKeluarga::where('config_id',  $setConfigId)->delete();
-            if($zz) {
+            if ($zz) {
                 $this->info('hapus TujuanKeluarga berhasil');
-               } else {
+            } else {
                 $this->info('hapus TujuanKeluarga gagal');
-               }
+            }
 
             $this->info('hapus LogKeluarga');
             $zz =  LogKeluarga::where('config_id',  $setConfigId)->delete();
-            if($zz) {
+            if ($zz) {
                 $this->info('hapus LogKeluarga berhasil');
-               } else {
+            } else {
                 $this->info('hapus LogKeluarga gagal');
-               }
+            }
 
 
             $this->info('hapus TwebPenduduk');
             $zz =  TwebPenduduk::where('config_id',  $setConfigId)->delete();
-            if($zz) {
+            if ($zz) {
                 $this->info('hapus TwebPenduduk berhasil');
-               } else {
+            } else {
                 $this->info('hapus TwebPenduduk gagal');
-               }
+            }
 
 
             $this->info('hapus TwebRtm');
-           $zz = TwebRtm::where('config_id',  $setConfigId)->delete();
-           if($zz) {
-            $this->info('hapus TwebRtm berhasil');
-           } else {
-            $this->info('hapus TwebRtm gagal');
-           }
-         
-           $this->info('mulai hapus Dtk');
+            $zz = TwebRtm::where('config_id',  $setConfigId)->delete();
+            if ($zz) {
+                $this->info('hapus TwebRtm berhasil');
+            } else {
+                $this->info('hapus TwebRtm gagal');
+            }
+
+            $this->info('mulai hapus Dtk');
             $zz = Dtk::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus Dtk berhasil');
             } else {
                 $this->info('hapus Dtk gagal');
             }
             $this->info('mulai hapus Pelapak');
             $zz = Pelapak::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus Pelapak berhasil');
             } else {
                 $this->info('hapus Pelapak gagal');
             }
             $this->info('mulai hapus Produk');
             $zz = Produk::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus Produk berhasil');
             } else {
                 $this->info('hapus Produk gagal');
             }
             $this->info('mulai hapus ProdukKategori');
             $zz = ProdukKategori::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus ProdukKategori berhasil');
             } else {
                 $this->info('hapus ProdukKategori gagal');
@@ -148,64 +148,64 @@ class KeluargaCommand extends Command
             // }
             $this->info('mulai hapus LogKeluarga');
             $zz = LogKeluarga::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus LogKeluarga berhasil');
             } else {
                 $this->info('hapus LogKeluarga gagal');
             }
             $this->info('mulai hapus LogPenduduk');
             $zz = LogPenduduk::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus LogPenduduk berhasil');
             } else {
                 $this->info('hapus LogPenduduk gagal');
             }
             $this->info('mulai hapus LogPerubahanPenduduk');
             $zz = LogPerubahanPenduduk::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus LogPerubahanPenduduk berhasil');
             } else {
                 $this->info('hapus LogPerubahanPenduduk gagal');
             }
             $this->info('mulai hapus TwebDesaPamong');
             $zz = TwebDesaPamong::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus TwebDesaPamong berhasil');
             } else {
                 $this->info('hapus TwebDesaPamong gagal');
             }
             $this->info('mulai hapus RefJabatan');
             $zz = RefJabatan::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus RefJabatan berhasil');
             } else {
                 $this->info('hapus RefJabatan gagal');
             }
             $this->info('mulai hapus Supleman');
             $zz = Supleman::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus Supleman berhasil');
             } else {
                 $this->info('hapus Supleman gagal');
             }
             $this->info('mulai hapus SuplemenTerdatum');
             $zz = SuplemenTerdatum::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus SuplemenTerdatum berhasil');
             } else {
                 $this->info('hapus SuplemenTerdatum gagal');
             }
             $this->info('mulai hapus TwebPendudukMandiri');
             $zz = TwebPendudukMandiri::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus TwebPendudukMandiri berhasil');
             } else {
                 $this->info('hapus TwebPendudukMandiri gagal');
             }
-            
+
             $this->info('mulai hapus user');
             $zz = User::where('config_id',  $setConfigId)->delete();
-            if($zz){
+            if ($zz) {
                 $this->info('hapus user berhasil');
             } else {
                 $this->info('hapus user gagal');
@@ -228,35 +228,52 @@ class KeluargaCommand extends Command
                 }, 'tweb_penduduk_mandiri']);
             }, 'dtks', 'log_keluarga'])->get();
 
+            $this->info('mulai input keluarga');
             foreach ($data as $asal) {
 
                 $asalnya = Arr::except($asal->toArray(), ['id']);
                 $asalnya['config_id'] =   $setConfigId;
                 // $this->info('masukkan keluarga');
                 $a = TujuanKeluarga::create($asalnya);
-                foreach ($asal->dtks ?? [] as $dtks) {
-                    // echo $a->id."\n";
-                    $isidtks = Arr::except($dtks->toArray(), ['id']);
-                    $isidtks['config_id'] =  $setConfigId;
-                    $isidtks['id_keluarga'] =  $a->id;
 
-                    // $this->info('masukkan dtks');
-                    $hasildtks = $a->dtks()->create($isidtks);
-                }
+
+
+
+                $this->info('mulai input penduduk');
                 foreach ($asal->penduduk as $penduduk) {
                     $isian = $penduduk->toArray();
                     $isian = Arr::except($isian, ['id_kk', 'dtks', 'dtks_anggota', 'id', 'rtm', 'pelapak']);
                     $isian['config_id'] =  $setConfigId;
 
-                    // $this->info('masukkan penduduk');
                     $pendu =  $a->penduduk()->create($isian);
+
+                    $this->info('mulai input rtm');
+
                     // masukkan rtm
                     if ($penduduk->rtm) {
+
                         $rtm = Arr::except($penduduk->rtm->toArray(), ['id', 'nik_kepala']);
                         $rtm['config_id'] =  $setConfigId;
 
                         $rtm =   $pendu->rtm()->create($rtm);
                     }
+
+                    if ($asal->dtks ?? false) {
+                        $this->info('mulai input dtks');
+                    }
+
+                    foreach ($asal->dtks ?? [] as $dtks) {
+                        // echo $a->id."\n";
+                        $isidtks = Arr::except($dtks->toArray(), ['id']);
+                        $isidtks['config_id'] =  $setConfigId;
+                        $isidtks['id_keluarga'] =  $a->id;
+                        $isidtks['id_rtm'] = $rtm->id ?? null;
+
+                        // $this->info('masukkan dtks');
+                        $hasildtks = $a->dtks()->create($isidtks);
+                    }
+
+                    $this->info('mulai input anggota dtks');
 
                     // masukkan anggota dtks
                     foreach ($penduduk->dtks_anggota ?? [] as $anggotadt) {

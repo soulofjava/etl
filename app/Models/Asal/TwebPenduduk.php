@@ -261,7 +261,7 @@ class TwebPenduduk extends Model
 
 	public function rtm()
 	{
-		return $this->hasOne(TwebRtm::class, 'nik_kepala');
+		return $this->hasOne(TwebRtm::class, 'nik_kepala', 'id');
 	}
 	public function dtks()
 	{
