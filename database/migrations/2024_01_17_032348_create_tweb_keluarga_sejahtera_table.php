@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('tweb_keluarga_sejahtera', function (Blueprint $table) {
-            $table->integer('id')->default(0)->primary();
+            $table->integer('id', true);
             $table->string('nama', 100)->nullable();
         });
     }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TwebAset
- * 
+ *
  * @property int $id_aset
  * @property string $golongan
  * @property string $bidang
@@ -23,22 +23,23 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TwebAset extends Model
 {
-	protected $table = 'tweb_aset';
-	protected $primaryKey = 'id_aset';
-	public $incrementing = false;
-	public $timestamps = false;
-	protected $connection = "tujuan";
+    protected $table = 'tweb_aset';
+    protected $primaryKey = 'id_aset';
+    public $incrementing = false;
+    public $timestamps = false;
+    protected $connection = "tujuan";
 
-	protected $casts = [
-		'id_aset' => 'int'
-	];
+    protected $casts = [
+        'id_aset' => 'int'
+    ];
 
-	protected $fillable = [
-		'golongan',
-		'bidang',
-		'kelompok',
-		'sub_kelompok',
-		'sub_sub_kelompok',
-		'nama'
-	];
+    protected $fillable = [
+        'id_aset',
+        'golongan',
+        'bidang',
+        'kelompok',
+        'sub_kelompok',
+        'sub_sub_kelompok',
+        'nama'
+    ];
 }

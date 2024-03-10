@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TwebCacat
- * 
+ *
  * @property int $id
  * @property string $nama
  *

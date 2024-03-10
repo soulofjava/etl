@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TwebKeluargaSejahtera
- * 
+ *
  * @property int $id
  * @property string|null $nama
  *
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class TwebKeluargaSejahtera extends Model
 {
 	protected $table = 'tweb_keluarga_sejahtera';
-	public $incrementing = false;
+	public $incrementing = true;
 	public $timestamps = false;
 	protected $connection = "tujuan";
 
