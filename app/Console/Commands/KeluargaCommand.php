@@ -236,9 +236,6 @@ class KeluargaCommand extends Command
                 // $this->info('masukkan keluarga');
                 $a = TujuanKeluarga::create($asalnya);
 
-
-
-
                 $this->info('mulai input penduduk');
                 foreach ($asal->penduduk as $penduduk) {
                     $isian = $penduduk->toArray();
@@ -458,5 +455,9 @@ class KeluargaCommand extends Command
         Artisan::call('app:u-command');
         $this->info('panggil m command');
         Artisan::call('app:m-command');
+        $this->info('panggil p command');
+        Artisan::call('app:p-command');
+        $this->info('panggil k command');
+        Artisan::call('app:k-command');
     }
 }

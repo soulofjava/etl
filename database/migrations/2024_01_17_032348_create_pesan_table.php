@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('pesan', function (Blueprint $table) {
-            $table->unsignedInteger('id')->primary();
+            $table->increments('id');
             $table->integer('config_id')->nullable()->index('pesan_config_fk');
             $table->string('judul')->nullable();
             $table->string('jenis', 50);

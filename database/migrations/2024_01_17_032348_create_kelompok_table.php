@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('keterangan', 300)->nullable();
             $table->string('kode', 16);
             $table->string('tipe', 100)->nullable()->default('kelompok');
+            $table->integer('id_lama')->nullable();
 
             $table->unique(['config_id', 'slug'], 'slug_config');
             $table->unique(['config_id', 'kode'], 'kode_config');

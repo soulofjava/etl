@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('hidden')->default(false);
             $table->string('ikon_kecil', 50)->nullable()->default('');
             $table->integer('parent')->nullable()->default(0);
+            $table->integer('old_value')->nullable();
 
             $table->unique(['config_id', 'slug'], 'slug_config');
         });

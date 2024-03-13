@@ -50,6 +50,8 @@ class MCommand extends Command
         }
 
         $this->info('pindah table media_sosial');
+
+        TujuanMediaSosial::where('config_id', $setConfigId)->delete();
         $a = MediaSosial::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
@@ -57,6 +59,7 @@ class MCommand extends Command
         }
 
         $this->info('pindah table menu');
+        TujuanMenu::where('config_id', $setConfigId)->delete();
         $a = Menu::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;

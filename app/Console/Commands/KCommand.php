@@ -10,6 +10,8 @@ use App\Models\Asal\KehadiranAlasanKeluar;
 use App\Models\Asal\KehadiranHariLibur;
 use App\Models\Asal\KehadiranJamKerja;
 use App\Models\Asal\Kelompok;
+use App\Models\Asal\Kium;
+use App\Models\Asal\TwebPenduduk;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\KaderPemberdayaanMasyarakat as TujuanKaderPemberdayaanMasyarakat;
 use App\Models\Tujuan\Kategori as TujuanKategori;
@@ -17,6 +19,9 @@ use App\Models\Tujuan\KehadiranAlasanKeluar as TujuanKehadiranAlasanKeluar;
 use App\Models\Tujuan\KehadiranHariLibur as TujuanKehadiranHariLibur;
 use App\Models\Tujuan\KehadiranJamKerja as TujuanKehadiranJamKerja;
 use App\Models\Tujuan\Kelompok as TujuanKelompok;
+use App\Models\Tujuan\Kium as TujuanKium;
+use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
+use Illuminate\Support\Arr;
 
 class KCommand extends Command
 {
@@ -117,5 +122,28 @@ class KCommand extends Command
         //         TujuanKelompok::create($item->toArray());
         //     }
         // }
+
+        $this->info('pindah table kia');
+        $a =  Kium::all();
+        TujuanKium::where('config_id', $setConfigId)->delete();
+        foreach ($a as $item) {
+            if ($item->ibu_id) {
+                $ibu_id = TwebPenduduk::where('id', $item->ibu_id)->first();
+                $d_ibu = TujuanTwebPenduduk::where('nik', $ibu_id->nik)->first();
+            } else {
+                $d_ibu = null;
+            }
+            if ($item->anak_id) {
+                $anak_id = TwebPenduduk::where('id', $item->anak_id)->first();
+                $d_anak = TujuanTwebPenduduk::where('nik', $anak_id->nik)->first();
+            } else {
+                $d_anak = null;
+            }
+            $isian = Arr::except($item->toArray(), ['config_id', 'ibu_id']);
+            $isian['config_id'] = $setConfigId;
+            $isian['ibu_id'] = $d_ibu->id ?? null;
+            $isian['anak_id'] = $d_anak->id ?? null;
+            TujuanKium::create($isian);
+        }
     }
 }
