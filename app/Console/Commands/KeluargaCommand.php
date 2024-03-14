@@ -445,6 +445,8 @@ class KeluargaCommand extends Command
                 }
             }
         });
+        $this->info('panggil t command');
+        Artisan::call('app:t-command');
         $this->info('panggil analisis command');
         Artisan::call('app:analisis-command');
         $this->info('panggil keuangan command');
@@ -459,5 +461,7 @@ class KeluargaCommand extends Command
         Artisan::call('app:p-command');
         $this->info('panggil k command');
         Artisan::call('app:k-command');
+        $this->info('panggil r command');
+        Artisan::call('app:r-command');
     }
 }

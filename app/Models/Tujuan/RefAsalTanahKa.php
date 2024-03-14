@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class RefAsalTanahKa
- * 
+ *
  * @property int $id
  * @property string $nama
  *

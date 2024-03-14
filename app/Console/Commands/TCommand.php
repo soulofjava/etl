@@ -145,29 +145,29 @@ class TCommand extends Command
         $this->info('pindah table tweb_surat_format');
         LogSurat::where('config_id',  $setConfigId)->delete();
         TujuanTwebSuratFormat::where('config_id',  $setConfigId)->delete();
-        $aa = TwebSuratFormat::with('log_surat')->get();
-        foreach ($aa as $asal) {
-            $isiantwebsuratformat = Arr::except($asal->toArray(), ['id']);
-            $isiantwebsuratformat['config_id'] = $setConfigId;
-            $fs = TujuanTwebSuratFormat::create($isiantwebsuratformat);
+        // $aa = TwebSuratFormat::with('log_surat')->get();
+        // foreach ($aa as $asal) {
+        //     $isiantwebsuratformat = Arr::except($asal->toArray(), ['id']);
+        //     $isiantwebsuratformat['config_id'] = $setConfigId;
+        //     $fs = TujuanTwebSuratFormat::create($isiantwebsuratformat);
 
-            if ($asal->log_surat) {
-                foreach ($asal->log_surat as $log_su) {
-                    $penduduk = TwebPenduduk::find($log_su->id_pend);
-                    if ($penduduk) {
-                        $tujuanpenduduk = TujuanTwebPenduduk::where('nik', $penduduk->nik)->first();
+        //     if ($asal->log_surat) {
+        //         foreach ($asal->log_surat as $log_su) {
+        //             $penduduk = TwebPenduduk::find($log_su->id_pend);
+        //             if ($penduduk) {
+        //                 $tujuanpenduduk = TujuanTwebPenduduk::where('nik', $penduduk->nik)->first();
 
-                        $isianlogsurat = Arr::except($log_su->toArray(), ['id', 'id_format_surat', 'id_pend']);
+        //                 $isianlogsurat = Arr::except($log_su->toArray(), ['id', 'id_format_surat', 'id_pend']);
 
-                        $isianlogsurat['config_id'] = $setConfigId;
-                        $isianlogsurat['id_format_surat'] = $fs->id;
-                        $isianlogsurat['id_pend'] = $tujuanpenduduk->id ?? null;
+        //                 $isianlogsurat['config_id'] = $setConfigId;
+        //                 $isianlogsurat['id_format_surat'] = $fs->id;
+        //                 $isianlogsurat['id_pend'] = $tujuanpenduduk->id ?? null;
 
-                        LogSurat::create($isianlogsurat);
-                    }
-                }
-            }
-        }
+        //                 LogSurat::create($isianlogsurat);
+        //             }
+        //         }
+        //     }
+        // }
 
         $this->info('pindah table tweb_wil_clusterdesa');
         TujuanTwebWilClusterdesa::where('config_id',  $setConfigId)->delete();

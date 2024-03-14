@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\Asal\Config;
+use App\Models\Asal\IbuHamil;
 use App\Models\Asal\KaderPemberdayaanMasyarakat;
 use App\Models\Asal\Kategori;
 use App\Models\Asal\KehadiranAlasanKeluar;
@@ -11,8 +12,10 @@ use App\Models\Asal\KehadiranHariLibur;
 use App\Models\Asal\KehadiranJamKerja;
 use App\Models\Asal\Kelompok;
 use App\Models\Asal\Kium;
+use App\Models\Asal\Posyandu;
 use App\Models\Asal\TwebPenduduk;
 use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Tujuan\IbuHamil as TujuanIbuHamil;
 use App\Models\Tujuan\KaderPemberdayaanMasyarakat as TujuanKaderPemberdayaanMasyarakat;
 use App\Models\Tujuan\Kategori as TujuanKategori;
 use App\Models\Tujuan\KehadiranAlasanKeluar as TujuanKehadiranAlasanKeluar;
@@ -20,6 +23,7 @@ use App\Models\Tujuan\KehadiranHariLibur as TujuanKehadiranHariLibur;
 use App\Models\Tujuan\KehadiranJamKerja as TujuanKehadiranJamKerja;
 use App\Models\Tujuan\Kelompok as TujuanKelompok;
 use App\Models\Tujuan\Kium as TujuanKium;
+use App\Models\Tujuan\Posyandu as TujuanPosyandu;
 use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
 use Illuminate\Support\Arr;
 
@@ -144,6 +148,29 @@ class KCommand extends Command
             $isian['ibu_id'] = $d_ibu->id ?? null;
             $isian['anak_id'] = $d_anak->id ?? null;
             TujuanKium::create($isian);
+        }
+
+        $this->info('pindah table ibu_hamil');
+        $a =  IbuHamil::all();
+        TujuanIbuHamil::where('config_id', $setConfigId)->delete();
+        foreach ($a as $item) {
+            if ($item->kia_id) {
+                $kia_id = Kium::find($item->kia_id);
+                $d_kia = TujuanKium::where('no_kia', $kia_id->no_kia)->first();
+            } else {
+                $d_kia = null;
+            }
+            if ($item->posyandu_id) {
+                $posyandu_id = Posyandu::find($item->posyandu_id);
+                $d_posyandu = TujuanPosyandu::where('nama', $posyandu_id->nama)->first();
+            } else {
+                $d_posyandu = null;
+            }
+            $isian = Arr::except($item->toArray(), ['config_id', 'id_ibu_hamil', 'kia_id', 'posyandu_id']);
+            $isian['config_id'] = $setConfigId;
+            $isian['kia_id'] = $d_kia->id ?? null;
+            $isian['posyandu_id'] = $d_posyandu->id ?? null;
+            TujuanIbuHamil::create($isian);
         }
     }
 }
