@@ -205,6 +205,7 @@ class KeluargaCommand extends Command
 
             $this->info('mulai hapus user');
             $zz = User::where('config_id',  $setConfigId)->delete();
+            $zz = UserGrup::where('config_id',  $setConfigId)->delete();
             if ($zz) {
                 $this->info('hapus user berhasil');
             } else {
@@ -229,6 +230,7 @@ class KeluargaCommand extends Command
             }, 'dtks', 'log_keluarga'])->get();
 
             $this->info('mulai input keluarga');
+
             foreach ($data as $asal) {
 
                 $asalnya = Arr::except($asal->toArray(), ['id']);
