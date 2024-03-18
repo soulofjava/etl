@@ -17,6 +17,7 @@ use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\Covid19Pantau as TujuanCovid19Pantau;
 use App\Models\Tujuan\Covid19Pemudik as TujuanCovid19Pemudik;
 use App\Models\Tujuan\Covid19Vaksin as TujuanCovid19Vaksin;
+use Illuminate\Support\Arr;
 
 class CCommand extends Command
 {
@@ -72,12 +73,15 @@ class CCommand extends Command
             $item->config_id = $setConfigId;
             TujuanCdesa::create($item->toArray());
         }
+
         $this->info('pindah table CdesaPenduduk');
         $a = CdesaPenduduk::all();
         TujuanCdesaPenduduk::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanCdesaPenduduk::create($item->toArray());
+            
+            $asalnya = Arr::except($item->toArray(), ['id']);
+            $asalnya['config_id'] = $setConfigId;
+            TujuanCdesaPenduduk::create($asalnya);
         }
 
         $this->info('pindah table Covid19Pantau');
