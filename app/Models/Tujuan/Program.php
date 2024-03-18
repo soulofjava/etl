@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 /**
  * Class Program
- * 
+ *
  * @property int $id
  * @property int|null $config_id
  * @property string $nama
@@ -28,7 +28,7 @@ use Illuminate\Support\Str;
  * @property int|null $created_by
  * @property Carbon|null $updated_at
  * @property int|null $updated_by
- * 
+ *
  * @property Config|null $config
  * @property Collection|DtksPengaturanProgram[] $dtks_pengaturan_programs
  *
@@ -36,76 +36,76 @@ use Illuminate\Support\Str;
  */
 class Program extends Model
 {
-	protected $table = 'program';
-	protected $connection = "tujuan";
+    protected $table = 'program';
+    protected $connection = "tujuan";
 
-	protected $casts = [
-		'config_id' => 'int',
-		'sasaran' => 'int',
-		'sdate' => 'datetime',
-		'edate' => 'datetime',
-		'userid' => 'int',
-		'status' => 'bool',
-		'created_by' => 'int',
-		'updated_by' => 'int'
-	];
+    protected $casts = [
+        'config_id' => 'int',
+        'sasaran' => 'int',
+        'sdate' => 'datetime',
+        'edate' => 'datetime',
+        'userid' => 'int',
+        'status' => 'bool',
+        'created_by' => 'int',
+        'updated_by' => 'int'
+    ];
 
-	protected $fillable = [
-		'config_id',
-		'slug',
-		'nama',
-		'sasaran',
-		'ndesc',
-		'sdate',
-		'edate',
-		'userid',
-		'status',
-		'asaldana',
-		'created_by',
-		'updated_by'
-	];
+    protected $fillable = [
+        'config_id',
+        'slug',
+        'nama',
+        'sasaran',
+        'ndesc',
+        'sdate',
+        'edate',
+        'userid',
+        'status',
+        'asaldana',
+        'created_by',
+        'updated_by'
+    ];
 
-	public function config()
-	{
-		return $this->belongsTo(Config::class);
-	}
+    public function config()
+    {
+        return $this->belongsTo(Config::class);
+    }
 
-	public function dtks_pengaturan_programs()
-	{
-		return $this->hasMany(DtksPengaturanProgram::class, 'id_bantuan');
-	}
+    public function dtks_pengaturan_programs()
+    {
+        return $this->hasMany(DtksPengaturanProgram::class, 'id_bantuan');
+    }
 
-	// public function generateSlug()
-	// {
-	// 	$baseSlug = Str::slug($this->nama);
-	// 	$slug = $baseSlug;
-	// 	$count = 1;
+    public function generateSlug()
+    {
+        $baseSlug = Str::slug($this->nama);
+        $slug = $baseSlug;
+        $count = 1;
 
-	// 	while ($this->slugExists($slug, $this->id)) {
-	// 		$slug = $baseSlug . '-' . $count;
-	// 		$count++;
-	// 	}
+        while ($this->slugExists($slug, $this->id)) {
+            $slug = $baseSlug . '-' . $count;
+            $count++;
+        }
 
-	// 	$this->slug = $slug;
-	// }
+        $this->slug = $slug;
+    }
 
-	// private function slugExists($slug, $currentId = null)
-	// {
-	// 	$query = static::where('slug', $slug);
+    private function slugExists($slug, $currentId = null)
+    {
+        $query = static::where('slug', $slug);
 
-	// 	if ($currentId !== null) {
-	// 		$query->where('id', '!=', $currentId);
-	// 	}
+        if ($currentId !== null) {
+            $query->where('id', '!=', $currentId);
+        }
 
-	// 	return $query->exists();
-	// }
+        return $query->exists();
+    }
 
-	// protected static function boot()
-	// {
-	// 	parent::boot();
+    protected static function boot()
+    {
+        parent::boot();
 
-	// 	static::creating(function ($post) {
-	// 		$post->generateSlug();
-	// 	});
-	// }
+        static::creating(function ($post) {
+            $post->generateSlug();
+        });
+    }
 }

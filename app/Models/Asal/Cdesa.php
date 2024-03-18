@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Cdesa
- * 
+ *
  * @property int $id
  * @property int|null $config_id
  * @property string $nomor
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $created_by
  * @property Carbon $updated_at
  * @property int $updated_by
- * 
+ *
  * @property Config|null $config
  * @property Collection|CdesaPenduduk[] $cdesa_penduduks
  * @property Collection|MutasiCdesa[] $mutasi_cdesas
@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cdesa extends Model
 {
 	protected $table = 'cdesa';
+	protected $connection = "asal";
 
 	protected $casts = [
 		'config_id' => 'int',

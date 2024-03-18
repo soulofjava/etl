@@ -81,20 +81,20 @@ class DCommand extends Command
         //     TujuanDokumenHidup::create($item->toArray());
         // }
 
-        $this->info('pindah table Dtk');
-        $a = Dtk::all();
-        TujuanDtk::where('config_id', $setConfigId)->delete();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanDtk::create($item->toArray());
-        }
-        $this->info('pindah table DtksAnggotum');
-        $a = DtksAnggotum::all();
-        TujuanDtksAnggotum::where('config_id', $setConfigId)->delete();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanDtksAnggotum::create($item->toArray());
-        }
+        // $this->info('pindah table Dtk');
+        // $a = Dtk::all();
+        // TujuanDtk::where('config_id', $setConfigId)->delete();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     TujuanDtk::create($item->toArray());
+        // }
+        // $this->info('pindah table DtksAnggotum');
+        // $a = DtksAnggotum::all();
+        // TujuanDtksAnggotum::where('config_id', $setConfigId)->delete();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     TujuanDtksAnggotum::create($item->toArray());
+        // }
         $this->info('pindah table DtksLampiran');
         $a = DtksLampiran::all();
         TujuanDtksLampiran::where('config_id', $setConfigId)->delete();

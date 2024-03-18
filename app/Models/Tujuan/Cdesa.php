@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Cdesa
- * 
+ *
  * @property int $id
  * @property int|null $config_id
  * @property string $nomor
@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $created_by
  * @property Carbon $updated_at
  * @property int $updated_by
- * 
+ *
  * @property Config|null $config
  * @property Collection|CdesaPenduduk[] $cdesa_penduduks
  * @property Collection|MutasiCdesa[] $mutasi_cdesas
@@ -33,38 +33,39 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Cdesa extends Model
 {
-	protected $table = 'cdesa';
+    protected $table = 'cdesa';
+    protected $connection = "tujuan";
 
-	protected $casts = [
-		'config_id' => 'int',
-		'jenis_pemilik' => 'bool',
-		'created_by' => 'int',
-		'updated_by' => 'int'
-	];
+    protected $casts = [
+        'config_id' => 'int',
+        'jenis_pemilik' => 'bool',
+        'created_by' => 'int',
+        'updated_by' => 'int'
+    ];
 
-	protected $fillable = [
-		'config_id',
-		'nomor',
-		'nama_kepemilikan',
-		'jenis_pemilik',
-		'nama_pemilik_luar',
-		'alamat_pemilik_luar',
-		'created_by',
-		'updated_by'
-	];
+    protected $fillable = [
+        'config_id',
+        'nomor',
+        'nama_kepemilikan',
+        'jenis_pemilik',
+        'nama_pemilik_luar',
+        'alamat_pemilik_luar',
+        'created_by',
+        'updated_by'
+    ];
 
-	public function config()
-	{
-		return $this->belongsTo(Config::class);
-	}
+    public function config()
+    {
+        return $this->belongsTo(Config::class);
+    }
 
-	public function cdesa_penduduks()
-	{
-		return $this->hasMany(CdesaPenduduk::class, 'id_cdesa');
-	}
+    public function cdesa_penduduks()
+    {
+        return $this->hasMany(CdesaPenduduk::class, 'id_cdesa');
+    }
 
-	public function mutasi_cdesas()
-	{
-		return $this->hasMany(MutasiCdesa::class, 'id_cdesa_masuk');
-	}
+    public function mutasi_cdesas()
+    {
+        return $this->hasMany(MutasiCdesa::class, 'id_cdesa_masuk');
+    }
 }

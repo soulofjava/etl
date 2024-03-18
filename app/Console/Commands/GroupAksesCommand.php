@@ -103,8 +103,8 @@ class GroupAksesCommand extends Command
             $asu = AsalUserGrup::get();
 
             foreach ($asu as $asuu) {
-                echo $asuu->nama;
-                echo $setConfigId;
+                // echo $asuu->nama;
+                // echo $setConfigId;
                 $ajk =  TujuanUserGrup::where('config_id', $setConfigId)->where('nama', $asuu->nama)->first();
                 $this->info("line 105");
                 if (!$ajk) {
@@ -119,7 +119,7 @@ class GroupAksesCommand extends Command
 
             $AsalGrupAkse = AsalGrupAkse::get();
             foreach ($AsalGrupAkse as $bm) {
-                echo "a" . $bm->id_modul;
+                // echo "a" . $bm->id_modul;
                 $asalnyamodul = Arr::except($bm->toArray(), ['id']);
                 $asalusergrup = AsalUserGrup::where('id', $bm->id_grup)->first();
                 // print_r($asalusergrup->nama ?? 'asu');

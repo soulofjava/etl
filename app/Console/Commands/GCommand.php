@@ -106,14 +106,14 @@ class GCommand extends Command
             }
         }
 
-        $this->info('pindah table GrupAkses');
-        $a = GrupAkse::all();
+        // $this->info('pindah table GrupAkses');
+        // $a = GrupAkse::all();
 
-        TujuanGrupAkse::where('config_id', $setConfigId)->delete();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanGrupAkse::create($item->toArray());
-        }
+        // TujuanGrupAkse::where('config_id', $setConfigId)->delete();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     TujuanGrupAkse::create($item->toArray());
+        // }
         $this->info('pindah table HubungWarga');
         $a = HubungWarga::all();
 

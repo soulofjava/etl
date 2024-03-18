@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('id', true);
             $table->integer('config_id')->nullable()->index('program_config_fk');
             $table->string('nama', 100);
+            $table->string('slug', 500)->nullable();
             $table->tinyInteger('sasaran')->nullable();
             $table->string('ndesc', 500)->nullable();
             $table->date('sdate');
@@ -28,6 +29,8 @@ return new class extends Migration
             $table->integer('created_by')->nullable();
             $table->timestamp('updated_at')->useCurrentOnUpdate()->nullable()->useCurrent();
             $table->integer('updated_by')->nullable();
+
+            $table->unique(['config_id', 'slug'], 'slug_config');
         });
     }
 

@@ -49,6 +49,7 @@ class NCommand extends Command
 
         $this->info('pindah table sentitems');
         $a = Notifikasi::all();
+        TujuanNotifikasi::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanNotifikasi::create($item->toArray());

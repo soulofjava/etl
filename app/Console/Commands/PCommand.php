@@ -7,11 +7,13 @@ use App\Models\Asal\Pengaduan;
 use App\Models\Asal\Pesan;
 use App\Models\Asal\PesanDetail;
 use App\Models\Asal\Posyandu;
+use App\Models\Asal\Program;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\Pengaduan as TujuanPengaduan;
 use App\Models\Tujuan\Pesan as TujuanPesan;
 use App\Models\Tujuan\PesanDetail as TujuanPesanDetail;
 use App\Models\Tujuan\Posyandu as TujuanPosyandu;
+use App\Models\Tujuan\Program as TujuanProgram;
 use Illuminate\Console\Command;
 
 class PCommand extends Command
@@ -55,6 +57,8 @@ class PCommand extends Command
 
         $this->info('pindah table pesan');
         $a = Pesan::all();
+        TujuanPesan::where('config_id', $setConfigId)->delete();
+        TujuanPesanDetail::where('config_id', $setConfigId)->delete();
         $pesanDetail = "";
         foreach ($a as $pesan) {
             // Set the new config_id
@@ -81,6 +85,7 @@ class PCommand extends Command
 
         $this->info('pindah table posyandu');
         $a = Posyandu::all();
+        TujuanPosyandu::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanPosyandu::create($item->toArray());
@@ -88,9 +93,22 @@ class PCommand extends Command
 
         $this->info('pindah table pengaduan');
         $a = Pengaduan::all();
+        TujuanPengaduan::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanPengaduan::create($item->toArray());
+        }
+
+        echo 'pindah table AnalisisIndikator ';
+        $a = Program::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $cek = TujuanProgram::where('config_id', $setConfigId)->where('nama', $item->nama)->first();
+
+            if (!$cek) {
+                // Create a new record in the destination table
+                TujuanProgram::create($item->toArray());
+            }
         }
     }
 }

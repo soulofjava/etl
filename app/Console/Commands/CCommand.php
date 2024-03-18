@@ -80,7 +80,7 @@ class CCommand extends Command
         $a = CdesaPenduduk::all();
         TujuanCdesaPenduduk::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
-            $cdesa = Cdesa::where('id', $item->cdesa_id)->first();
+            $cdesa = Cdesa::where('id', $item->id_cdesa)->first();
             $d_cdesa = TujuanCdesa::where('nomor', $cdesa->nomor)->first();
             if ($item->id_pend) {
                 $id_pend = TwebPenduduk::where('id', $item->id_pend)->first();

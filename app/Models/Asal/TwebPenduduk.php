@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TwebPenduduk
- * 
+ *
  * @property int $id
  * @property int|null $config_id
  * @property string $nama
@@ -87,7 +87,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $suku
  * @property string|null $bpjs_ketenagakerjaan
  * @property string|null $hubung_warga
- * 
+ *
  * @property Config|null $config
  * @property Collection|AnggotaGrupKontak[] $anggota_grup_kontaks
  * @property Collection|Covid19Pemudik[] $covid19_pemudiks
