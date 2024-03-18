@@ -12,11 +12,13 @@ use App\Models\Asal\CdesaPenduduk;
 use App\Models\Asal\Covid19Pantau;
 use App\Models\Asal\Covid19Pemudik;
 use App\Models\Asal\Covid19Vaksin;
+use App\Models\Asal\TwebPenduduk;
 use App\Models\Tujuan\CdesaPenduduk as TujuanCdesaPenduduk;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\Covid19Pantau as TujuanCovid19Pantau;
 use App\Models\Tujuan\Covid19Pemudik as TujuanCovid19Pemudik;
 use App\Models\Tujuan\Covid19Vaksin as TujuanCovid19Vaksin;
+use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
 use Illuminate\Support\Arr;
 
 class CCommand extends Command
@@ -78,8 +80,17 @@ class CCommand extends Command
         $a = CdesaPenduduk::all();
         TujuanCdesaPenduduk::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
-            
-            $asalnya = Arr::except($item->toArray(), ['id']);
+            $cdesa = Cdesa::where('id', $item->cdesa_id)->first();
+            $d_cdesa = TujuanCdesa::where('nomor', $cdesa->nomor)->first();
+            if ($item->id_pend) {
+                $id_pend = TwebPenduduk::where('id', $item->id_pend)->first();
+                $d_id_pend = TujuanTwebPenduduk::where('nik', $id_pend->nik)->first();
+            } else {
+                $d_id_pend = null;
+            }
+            $asalnya = Arr::except($item->toArray(), ['id', 'id_pend', 'id_cdesa']);
+            $asalnya['id_pend'] = $d_id_pend->id;
+            $asalnya['id_cdesa'] = $d_cdesa->id;
             $asalnya['config_id'] = $setConfigId;
             TujuanCdesaPenduduk::create($asalnya);
         }
