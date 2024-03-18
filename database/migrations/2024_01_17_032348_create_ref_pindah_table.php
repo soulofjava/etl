@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('ref_pindah', function (Blueprint $table) {
-            $table->tinyInteger('id')->primary();
+            $table->tinyInteger('id')->primary()->increments();
             $table->string('nama', 50);
         });
     }

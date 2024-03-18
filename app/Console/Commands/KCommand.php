@@ -11,6 +11,7 @@ use App\Models\Asal\KehadiranAlasanKeluar;
 use App\Models\Asal\KehadiranHariLibur;
 use App\Models\Asal\KehadiranJamKerja;
 use App\Models\Asal\Kelompok;
+use App\Models\Asal\KelompokMaster;
 use App\Models\Asal\Kium;
 use App\Models\Asal\Posyandu;
 use App\Models\Asal\TwebPenduduk;
@@ -22,6 +23,7 @@ use App\Models\Tujuan\KehadiranAlasanKeluar as TujuanKehadiranAlasanKeluar;
 use App\Models\Tujuan\KehadiranHariLibur as TujuanKehadiranHariLibur;
 use App\Models\Tujuan\KehadiranJamKerja as TujuanKehadiranJamKerja;
 use App\Models\Tujuan\Kelompok as TujuanKelompok;
+use App\Models\Tujuan\KelompokMaster as TujuanKelompokMaster;
 use App\Models\Tujuan\Kium as TujuanKium;
 use App\Models\Tujuan\Posyandu as TujuanPosyandu;
 use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
@@ -105,22 +107,31 @@ class KCommand extends Command
         //     $item->config_id = $setConfigId;
         //     TujuanKehadiranJamKerja::create($item->toArray());
         // }
-        $this->info('pindah table Kelompok');
-        $a =  Kelompok::all();
-        TujuanKelompok::where('config_id', $setConfigId)->delete();
+
+        $this->info('pindah table Kelompok Master');
+        $a =  KelompokMaster::all();
+        TujuanKelompokMaster::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            $item->id_lama = $item->id;
-            $cek = TujuanKelompok::where('config_id', $item->config_id)->where('slug', $item->slug)->first();
-            if (!$cek) {
-                TujuanKelompok::create($item->toArray());
+            $id_master = TujuanKelompokMaster::create($item->toArray());
+            if ($item->kelompoks) {
+                foreach ($item->kelompoks as $kel) {
+                    $ket = TwebPenduduk::where('id', $kel->id_ketua)->first();
+                    $d_ket = TujuanTwebPenduduk::where('nik', $ket->nik)->first();
+                    $isiankel = Arr::except($kel->toArray(), ['id_master', 'id_ketua']);
+                    $isiankel['id_master'] = $id_master->id;
+                    $isiankel['id_ketua'] = $d_ket->id;
+                    TujuanKelompok::create($isiankel);
+                }
             }
         }
+
         // $this->info('pindah table Kelompok');
         // $a =  Kelompok::all();
         // TujuanKelompok::where('config_id', $setConfigId)->delete();
         // foreach ($a as $item) {
         //     $item->config_id = $setConfigId;
+        //     $item->id_lama = $item->id;
         //     $cek = TujuanKelompok::where('config_id', $item->config_id)->where('slug', $item->slug)->first();
         //     if (!$cek) {
         //         TujuanKelompok::create($item->toArray());

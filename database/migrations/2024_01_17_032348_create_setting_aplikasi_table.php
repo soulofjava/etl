@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('attribute')->nullable();
             $table->string('kategori', 30)->nullable();
 
-            $table->unique(['config_id', 'key'], 'key_config');
+            $table->index(['config_id', 'key'], 'key_config');
         });
     }
 

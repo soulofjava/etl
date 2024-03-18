@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class RefPindah
- * 
+ *
  * @property int $id
  * @property string $nama
- * 
+ *
  * @property Collection|LogPenduduk[] $log_penduduks
  *
  * @package App\Models
@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
 class RefPindah extends Model
 {
 	protected $table = 'ref_pindah';
-	public $incrementing = false;
+	public $incrementing = true;
 	public $timestamps = false;
 	protected $connection = "tujuan";
 
@@ -31,6 +31,7 @@ class RefPindah extends Model
 	];
 
 	protected $fillable = [
+		'id',
 		'nama'
 	];
 

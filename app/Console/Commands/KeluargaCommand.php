@@ -51,6 +51,9 @@ class KeluargaCommand extends Command
      */
     public function handle()
     {
+        $this->info('panggil r command');
+        Artisan::call('app:r-command');
+
         DB::transaction(function () {
             $setConfigId = '';
             $this->info('pindah table config');
@@ -465,5 +468,31 @@ class KeluargaCommand extends Command
         Artisan::call('app:k-command');
         $this->info('panggil r command');
         Artisan::call('app:r-command');
+        $this->info('panggil a command');
+        Artisan::call('app:a-command');
+        $this->info('panggil b command');
+        Artisan::call('app:b-command');
+        $this->info('panggil buku command');
+        Artisan::call('app:buku-command');
+        $this->info('panggil c command');
+        Artisan::call('app:c-command');
+        $this->info('panggil d command');
+        Artisan::call('app:d-command');
+        $this->info('panggil g command');
+        Artisan::call('app:g-command');
+        $this->info('panggil i command');
+        Artisan::call('app:i-command');
+        $this->info('panggil l command');
+        Artisan::call('app:l-command');
+        $this->info('panggil n command');
+        Artisan::call('app:n-command');
+        $this->info('panggil o command');
+        Artisan::call('app:o-command');
+        $this->info('panggil p command');
+        Artisan::call('app:p-command');
+        $this->info('panggil s command');
+        Artisan::call('app:s-command');
+        $this->info('panggil w command');
+        Artisan::call('app:w-command');
     }
 }

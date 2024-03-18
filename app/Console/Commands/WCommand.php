@@ -50,6 +50,7 @@ class WCommand extends Command
 
         $this->info('pindah table widget');
         $a = Widget::all();
+        TujuanWidget::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanWidget::create($item->toArray());

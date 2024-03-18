@@ -21,7 +21,7 @@ return new class extends Migration
             $table->double('akumulasi', 8, 3);
             $table->timestamp('tgl_update')->useCurrent();
 
-            $table->unique(['id_master', 'id_periode', 'id_subjek'], 'id_master');
+            $table->index(['id_master', 'id_periode', 'id_subjek'], 'id_master');
         });
     }
 

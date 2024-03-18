@@ -56,6 +56,7 @@ class SCommand extends Command
 
         $this->info('pindah table sentitems');
         $a = Sentitem::all();
+        TujuanSentitem::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanSentitem::create($item->toArray());
@@ -63,6 +64,7 @@ class SCommand extends Command
 
         $this->info('pindah table setting_aplikasi');
         $a = SettingAplikasi::all();
+        SettingAplikasi::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             SettingAplikasi::create($item->toArray());
@@ -70,6 +72,7 @@ class SCommand extends Command
 
         $this->info('pindah table statistics');
         $a = Statistic::all();
+        TujuanStatistic::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanStatistic::create($item->toArray());
@@ -77,6 +80,7 @@ class SCommand extends Command
 
         $this->info('pindah table surat_keluar');
         $a = SuratKeluar::all();
+        TujuanSuratKeluar::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanSuratKeluar::create($item->toArray());
@@ -84,6 +88,7 @@ class SCommand extends Command
 
         $this->info('pindah table surat_masuk');
         $a = SuratMasuk::all();
+        TujuanSuratMasuk::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             TujuanSuratMasuk::create($item->toArray());

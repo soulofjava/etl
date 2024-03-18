@@ -29,7 +29,7 @@ return new class extends Migration
             $table->integer('urut')->nullable();
             $table->integer('urut_cetak')->nullable();
 
-            $table->unique(['config_id', 'rt', 'rw', 'dusun'], 'rt_config');
+            $table->index(['config_id', 'rt', 'rw', 'dusun'], 'rt_config');
         });
     }
 
