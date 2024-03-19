@@ -3,12 +3,18 @@
 namespace App\Console\Commands;
 
 use App\Models\Asal\Config;
+use App\Models\Asal\TwebDesaPamong;
+use App\Models\Asal\TwebPenduduk;
+use App\Models\Asal\TwebSuratFormat;
 use App\Models\Asal\Url;
 use App\Models\Asal\User;
 use App\Models\Asal\UserGrup;
 use App\Models\Tujuan\Artikel;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\Kategori;
+use App\Models\Tujuan\TwebDesaPamong as TujuanTwebDesaPamong;
+use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
+use App\Models\Tujuan\TwebSuratFormat as TujuanTwebSuratFormat;
 use App\Models\Tujuan\Url as TujuanUrl;
 use App\Models\Tujuan\User as TujuanUser;
 use App\Models\Tujuan\UserGrup as TujuanUserGrup;
@@ -59,7 +65,25 @@ class UCommand extends Command
         $a = Url::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            TujuanUrl::create($item->toArray());
+            $urls_id = TujuanUrl::create($item->toArray());
+
+            if ($item->log_surat) {
+                $id_format_surat = TwebSuratFormat::where('id', $item->log_surat->id_format_surat)->first();
+                $d_id_format_surat = TujuanTwebSuratFormat::where('config_id', $setConfigId)->where('url_surat', $id_format_surat->url_surat)->first();
+                $id_pend = TwebPenduduk::where('id', $item->log_surat->id_pend)->first();
+                $d_id_pend = TujuanTwebPenduduk::where('nik', $id_pend->nik)->first();
+                $id_pamong = TwebDesaPamong::where('pamong_id', $item->log_surat->id_pamong)->first();
+                $id_pend_pamong = TwebPenduduk::where('id', $id_pamong->id_pend)->first();
+                $d_id_pend_pamong = TujuanTwebPenduduk::where('nik', $id_pend_pamong->nik)->first();
+                $d_id_pamong = TujuanTwebDesaPamong::where('id_pend', $d_id_pend_pamong->id)->first();
+
+                $isianlogsurat = Arr::except($item->log_surat->toArray(), ['id', 'urls_id']);
+                $isianlogsurat['config_id'] = $setConfigId;
+                $isianlogsurat['id_format_surat'] = $d_id_format_surat->id ?? null;
+                $isianlogsurat['id_pend'] = $d_id_pend->id ?? null;
+                $isianlogsurat['id_pamong'] = $d_id_pamong->pamong_id;
+                $urls_id->log_surat()->create($isianlogsurat);
+            }
         }
 
         $this->info('pindah table user');

@@ -134,6 +134,9 @@ class ACommand extends Command
             $item->config_id = $setConfigId;
             $cek = TujuanAnalisisParameter::where('config_id', $setConfigId)->where('kode_jawaban', $item->kode_jawaban)->first();
             if (!$cek) {
+                $id_indikator = AnalisisIndikator::where('id', $item->id_indikator)->first();
+                $c = TujuanAnalisisIndikator::where('config_id', $setConfigId)->where('pertanyaan', $id_indikator->pertanyaan)->first();
+                $item->id_indikator = $c->id;
                 TujuanAnalisisParameter::create($item->toArray());
             }
         }

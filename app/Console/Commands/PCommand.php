@@ -99,7 +99,6 @@ class PCommand extends Command
             TujuanPengaduan::create($item->toArray());
         }
 
-        echo 'pindah table AnalisisIndikator ';
         $a = Program::all();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;

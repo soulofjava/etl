@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TwebSuratFormat
- * 
+ *
  * @property int $id
  * @property int|null $config_id
  * @property string $nama
@@ -42,68 +42,69 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $created_by
  * @property Carbon|null $updated_at
  * @property int|null $updated_by
- * 
+ *
  * @property Config|null $config
  *
  * @package App\Models
  */
 class TwebSuratFormat extends Model
 {
-	protected $table = 'tweb_surat_format';
+    protected $table = 'tweb_surat_format';
+    protected $connection = "tujuan";
 
-	protected $casts = [
-		'config_id' => 'int',
-		'kunci' => 'bool',
-		'favorit' => 'bool',
-		'jenis' => 'int',
-		'mandiri' => 'bool',
-		'masa_berlaku' => 'int',
-		'qr_code' => 'bool',
-		'logo_garuda' => 'bool',
-		'kecamatan' => 'bool',
-		'footer' => 'int',
-		'header' => 'int',
-		'created_by' => 'int',
-		'updated_by' => 'int'
-	];
+    protected $casts = [
+        'config_id' => 'int',
+        'kunci' => 'bool',
+        'favorit' => 'bool',
+        'jenis' => 'int',
+        'mandiri' => 'bool',
+        'masa_berlaku' => 'int',
+        'qr_code' => 'bool',
+        'logo_garuda' => 'bool',
+        'kecamatan' => 'bool',
+        'footer' => 'int',
+        'header' => 'int',
+        'created_by' => 'int',
+        'updated_by' => 'int'
+    ];
 
-	protected $fillable = [
-		'config_id',
-		'nama',
-		'url_surat',
-		'kode_surat',
-		'lampiran',
-		'kunci',
-		'favorit',
-		'jenis',
-		'mandiri',
-		'masa_berlaku',
-		'satuan_masa_berlaku',
-		'qr_code',
-		'logo_garuda',
-		'kecamatan',
-		'syarat_surat',
-		'template',
-		'template_desa',
-		'form_isian',
-		'kode_isian',
-		'orientasi',
-		'ukuran',
-		'margin',
-		'footer',
-		'header',
-		'format_nomor',
-		'created_by',
-		'updated_by'
-	];
+    protected $fillable = [
+        'config_id',
+        'nama',
+        'url_surat',
+        'kode_surat',
+        'lampiran',
+        'kunci',
+        'favorit',
+        'jenis',
+        'mandiri',
+        'masa_berlaku',
+        'satuan_masa_berlaku',
+        'qr_code',
+        'logo_garuda',
+        'kecamatan',
+        'syarat_surat',
+        'template',
+        'template_desa',
+        'form_isian',
+        'kode_isian',
+        'orientasi',
+        'ukuran',
+        'margin',
+        'footer',
+        'header',
+        'format_nomor',
+        'created_by',
+        'updated_by'
+    ];
 
-	public function config()
-	{
-		return $this->belongsTo(Config::class);
-	}
+    public function config()
+    {
+        return $this->belongsTo(Config::class);
+    }
 
-	public function log_surat()
-	{
-		return $this->hasMany(LogSurat::class, 'id_format_surat');
-	}
+    public function log_surat()
+    {
+        return $this->hasMany(LogSurat::class, 'id_format_surat');
+    }
 }

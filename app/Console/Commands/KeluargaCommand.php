@@ -8,10 +8,12 @@ use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
 use App\Models\Tujuan\Dtk;
+use App\Models\Tujuan\DtksLampiran;
 use App\Models\Tujuan\Kategori;
 use App\Models\Tujuan\LogKeluarga;
 use App\Models\Tujuan\LogPenduduk;
 use App\Models\Tujuan\LogPerubahanPenduduk;
+use App\Models\Tujuan\LogSurat;
 use App\Models\Tujuan\Pelapak;
 use App\Models\Tujuan\Produk;
 use App\Models\Tujuan\ProdukKategori;
@@ -142,13 +144,6 @@ class KeluargaCommand extends Command
             // } else {
             //     $this->info('hapus param gagal');
             // }
-            // $this->info('mulai hapus param');
-            // $zz = // Program::where('config_id',  $setConfigId)->delete();
-            // if($zz){
-            //     $this->info('hapus param berhasil');
-            // } else {
-            //     $this->info('hapus param gagal');
-            // }
             $this->info('mulai hapus LogKeluarga');
             $zz = LogKeluarga::where('config_id',  $setConfigId)->delete();
             if ($zz) {
@@ -214,6 +209,16 @@ class KeluargaCommand extends Command
             } else {
                 $this->info('hapus user gagal');
             }
+
+            Program::where('config_id',  $setConfigId)->delete();
+            $zz = LogSurat::where('config_id',  $setConfigId)->delete();
+            if ($zz) {
+                $this->info('hapus log SURAT berhasil');
+            } else {
+                $this->info('hapus log SURAT gagal');
+            }
+            ProgramPesertum::where('config_id',  $setConfigId)->delete();
+            DtksLampiran::where('config_id', $setConfigId)->delete();
             $data = AsalKeluarga::with(['penduduk' => function ($a) {
                 $a->with(['dtks', 'dtks_anggota', 'rtm', 'pelapak' => function ($b) {
                     $b->with(['produks' => function ($c) {
@@ -238,7 +243,6 @@ class KeluargaCommand extends Command
 
                 $asalnya = Arr::except($asal->toArray(), ['id']);
                 $asalnya['config_id'] =   $setConfigId;
-                // $this->info('masukkan keluarga');
                 $a = TujuanKeluarga::create($asalnya);
 
                 $this->info('mulai input penduduk');
@@ -257,7 +261,14 @@ class KeluargaCommand extends Command
                         $rtm = Arr::except($penduduk->rtm->toArray(), ['id', 'nik_kepala']);
                         $rtm['config_id'] =  $setConfigId;
 
-                        $rtm =   $pendu->rtm()->create($rtm);
+                        $rtm = $pendu->rtm()->create($rtm);
+
+                        if ($penduduk->rtm->dtks_lampirans) {
+                            foreach ($penduduk->rtm->dtks_lampirans as $lamp) {
+                                $isian_lamp = Arr::except($lamp->toArray(), ['id', 'id_rtm']);
+                                $rtm->dtks_lampirans()->create($isian_lamp);
+                            }
+                        }
                     }
 
                     if ($asal->dtks ?? false) {
@@ -273,21 +284,22 @@ class KeluargaCommand extends Command
 
                         // $this->info('masukkan dtks');
                         $hasildtks = $a->dtks()->create($isidtks);
-                    }
 
-                    $this->info('mulai input anggota dtks');
 
-                    // masukkan anggota dtks
-                    if ($penduduk->dtks_anggota) {
-                        foreach ($penduduk->dtks_anggota ?? [] as $anggotadt) {
-                            $isianggotadt = Arr::except($anggotadt->toArray(), ['id_dtks', 'id']);
-                            $isianggotadt['config_id'] =  $setConfigId;
-                            $isianggotadt['id_penduduk'] =  $pendu->id ?? null;
-                            $isianggotadt['id_keluarga'] =  $a->id;
-                            $isianggotadt['id_dtks'] =  $hasildtks->id;
-                            $isianggotadt['id_rtm'] =  $rtm->id ?? null;
-                            // $this->info('masukkan anggota dtks');
-                            $pendu->dtks_anggota()->create($isianggotadt);
+                        $this->info('mulai input anggota dtks');
+
+                        // masukkan anggota dtks
+                        if ($penduduk->dtks_anggota) {
+                            foreach ($penduduk->dtks_anggota ?? [] as $anggotadt) {
+                                $isianggotadt = Arr::except($anggotadt->toArray(), ['id_dtks', 'id']);
+                                $isianggotadt['config_id'] =  $setConfigId;
+                                $isianggotadt['id_penduduk'] =  $pendu->id ?? null;
+                                $isianggotadt['id_keluarga'] =  $a->id;
+                                $isianggotadt['id_dtks'] =  $hasildtks->id ?? null;
+                                $isianggotadt['id_rtm'] =  $rtm->id ?? null;
+                                // $this->info('masukkan anggota dtks');
+                                $pendu->dtks_anggota()->create($isianggotadt);
+                            }
                         }
                     }
                     // masukkan pelapak
@@ -461,10 +473,10 @@ class KeluargaCommand extends Command
         Artisan::call('app:a-command');
         $this->info('panggil keuangan command');
         Artisan::call('app:keuangan-command');
-        $this->info('panggil group-akses command');
-        Artisan::call('app:group-akses-command');
         $this->info('panggil u command');
         Artisan::call('app:u-command');
+        $this->info('panggil group-akses command');
+        Artisan::call('app:group-akses-command');
         $this->info('panggil m command');
         Artisan::call('app:m-command');
         $this->info('panggil p command');
@@ -479,6 +491,8 @@ class KeluargaCommand extends Command
         Artisan::call('app:buku-command');
         $this->info('panggil c command');
         Artisan::call('app:c-command');
+        $this->info('panggil s command');
+        Artisan::call('app:s-command');
         $this->info('panggil d command');
         Artisan::call('app:d-command');
         $this->info('panggil g command');
@@ -493,8 +507,6 @@ class KeluargaCommand extends Command
         Artisan::call('app:o-command');
         $this->info('panggil p command');
         Artisan::call('app:p-command');
-        $this->info('panggil s command');
-        Artisan::call('app:s-command');
         $this->info('panggil w command');
         Artisan::call('app:w-command');
     }

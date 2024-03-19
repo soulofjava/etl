@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('nama_non_warga', 100)->nullable();
             $table->string('keterangan', 200)->nullable();
             $table->string('lokasi_arsip', 150)->nullable()->default('');
-            $table->integer('urls_id')->nullable()->unique('urls_id');
+            $table->integer('urls_id')->nullable();
             $table->tinyInteger('status')->default(0)->comment('0. Konsep, 1. Cetak');
             $table->string('log_verifikasi', 100)->nullable();
             $table->boolean('tte')->nullable();
@@ -42,6 +42,9 @@ return new class extends Migration
             $table->longText('isi_surat')->nullable();
             $table->boolean('kecamatan')->default(true);
             $table->dateTime('deleted_at')->nullable();
+
+
+            $table->unique(['config_id', 'urls_id'], 'urls_id');
         });
     }
 

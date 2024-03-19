@@ -53,13 +53,13 @@ class GroupAksesCommand extends Command
                     $setConfigId = $cek->id;
                 }
             }
-            echo $setConfigId;
+
             TujuanSettingModul::where('config_id', $setConfigId)->delete();
             // $asal = AsalGrupAkse::get();
             // $this->info('line 56');
             // foreach ($asal as $item) {
             //     $asalnya = Arr::except($item->toArray(), ['id']);
-            //     // $asalnya['config_id'] = $setConfigId;
+            //     $asalnya['config_id'] = $setConfigId;
             //     $hasil = TujuanGrupAkse::create($asalnya);
             //     $b = AsalGrupAkse::where('id_grup', $item->id)->update(['id_grup' => $hasil->id]);
             //     $this->info('line 62');
@@ -67,7 +67,7 @@ class GroupAksesCommand extends Command
 
             $modul = AsalSettingModul::get();
 
-            $b = [];
+            // $b = [];
             foreach ($modul as $a) {
                 // echo $a->modul;
                 if ($a->modul ?? '') {

@@ -89,12 +89,5 @@ class LCommand extends Command
             $item->config_id = $setConfigId;
             TujuanLogSinkronisasi::create($item->toArray());
         }
-
-        $this->info('pindah table log_sinkronisasi');
-        $a = LogSinkronisasi::all();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanLogSinkronisasi::create($item->toArray());
-        }
     }
 }

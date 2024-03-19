@@ -9,6 +9,7 @@ use App\Models\Asal\TeksBerjalan;
 use App\Models\Asal\TwebAset;
 use App\Models\Asal\TwebCacat;
 use App\Models\Asal\TwebCaraKb;
+use App\Models\Asal\TwebDesaPamong;
 use App\Models\Asal\TwebGolonganDarah;
 use App\Models\Asal\TwebKeluargaSejahtera;
 use App\Models\Asal\TwebPenduduk;
@@ -38,6 +39,7 @@ use App\Models\Tujuan\TeksBerjalan as TujuanTeksBerjalan;
 use App\Models\Tujuan\TwebAset as TujuanTwebAset;
 use App\Models\Tujuan\TwebCacat as TujuanTwebCacat;
 use App\Models\Tujuan\TwebCaraKb as TujuanTwebCaraKb;
+use App\Models\Tujuan\TwebDesaPamong as TujuanTwebDesaPamong;
 use App\Models\Tujuan\TwebGolonganDarah as TujuanTwebGolonganDarah;
 use App\Models\Tujuan\TwebKeluargaSejahtera as TujuanTwebKeluargaSejahtera;
 use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
@@ -145,29 +147,31 @@ class TCommand extends Command
         $this->info('pindah table tweb_surat_format');
         LogSurat::where('config_id',  $setConfigId)->delete();
         TujuanTwebSuratFormat::where('config_id',  $setConfigId)->delete();
-        // $aa = TwebSuratFormat::with('log_surat')->get();
-        // foreach ($aa as $asal) {
-        //     $isiantwebsuratformat = Arr::except($asal->toArray(), ['id']);
-        //     $isiantwebsuratformat['config_id'] = $setConfigId;
-        //     $fs = TujuanTwebSuratFormat::create($isiantwebsuratformat);
+        $aa = TwebSuratFormat::with('log_surat')->get();
+        foreach ($aa as $asal) {
+            $isiantwebsuratformat = Arr::except($asal->toArray(), ['id']);
+            $isiantwebsuratformat['config_id'] = $setConfigId;
+            $fs = TujuanTwebSuratFormat::create($isiantwebsuratformat);
 
-        //     if ($asal->log_surat) {
-        //         foreach ($asal->log_surat as $log_su) {
-        //             $penduduk = TwebPenduduk::find($log_su->id_pend);
-        //             if ($penduduk) {
-        //                 $tujuanpenduduk = TujuanTwebPenduduk::where('nik', $penduduk->nik)->first();
+            if ($asal->log_surat) {
+                foreach ($asal->log_surat as $item) {
+                    $id_pend = TwebPenduduk::where('id', $item->id_pend)->first();
+                    if ($id_pend) {
+                        $d_id_pend = TujuanTwebPenduduk::where('nik', $id_pend->nik)->first();
+                    }
+                    $id_pamong = TwebDesaPamong::where('pamong_id', $item->id_pamong)->first();
+                    $id_pend_pamong = TwebPenduduk::where('id', $id_pamong->id_pend)->first();
+                    $d_id_pend_pamong = TujuanTwebPenduduk::where('nik', $id_pend_pamong->nik)->first();
+                    $d_id_pamong = TujuanTwebDesaPamong::where('id_pend', $d_id_pend_pamong->id)->first();
 
-        //                 $isianlogsurat = Arr::except($log_su->toArray(), ['id', 'id_format_surat', 'id_pend']);
-
-        //                 $isianlogsurat['config_id'] = $setConfigId;
-        //                 $isianlogsurat['id_format_surat'] = $fs->id;
-        //                 $isianlogsurat['id_pend'] = $tujuanpenduduk->id ?? null;
-
-        //                 LogSurat::create($isianlogsurat);
-        //             }
-        //         }
-        //     }
-        // }
+                    $isianlogsurat = Arr::except($item->toArray(), ['id', 'urls_id', 'id_format_surat']);
+                    $isianlogsurat['config_id'] = $setConfigId;
+                    $isianlogsurat['id_pend'] = $d_id_pend->id ?? null;
+                    $isianlogsurat['id_pamong'] = $d_id_pamong->pamong_id;
+                    $fs->log_surat()->create($isianlogsurat);
+                }
+            }
+        }
 
         $this->info('pindah table tweb_wil_clusterdesa');
         TujuanTwebWilClusterdesa::where('config_id',  $setConfigId)->delete();

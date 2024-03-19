@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('analisis_respon', function (Blueprint $table) {
             $table->integer('id_indikator')->index('id_indikator');
             $table->integer('config_id')->nullable()->index('analisis_respon_config_fk');
-            $table->integer('id_parameter');
+            $table->integer('id_parameter')->nullable();
             $table->integer('id_subjek');
             $table->integer('id_periode')->index('id_periode');
 

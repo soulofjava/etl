@@ -10,6 +10,7 @@ use App\Models\Asal\SuratKeluar;
 use App\Models\Asal\SuratMasuk;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Tujuan\Sentitem as TujuanSentitem;
+use App\Models\Tujuan\SettingAplikasi as TujuanSettingAplikasi;
 use App\Models\Tujuan\Statistic as TujuanStatistic;
 use App\Models\Tujuan\SuratKeluar as TujuanSuratKeluar;
 use App\Models\Tujuan\SuratMasuk as TujuanSuratMasuk;
@@ -67,7 +68,7 @@ class SCommand extends Command
         SettingAplikasi::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            SettingAplikasi::create($item->toArray());
+            TujuanSettingAplikasi::create($item->toArray());
         }
 
         $this->info('pindah table statistics');
