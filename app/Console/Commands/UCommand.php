@@ -88,8 +88,6 @@ class UCommand extends Command
 
         $this->info('pindah table user');
 
-        TujuanUser::where('config_id',  $setConfigId)->delete();
-        TujuanUserGrup::where('config_id',  $setConfigId)->delete();
         Kategori::where('config_id',  $setConfigId)->delete();
         Artikel::where('config_id',  $setConfigId)->delete();
         $a = User::with(['user_grup', 'artikel' => function ($a) {
