@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Artikel
- * 
+ *
  * @property int $id
  * @property int|null $config_id
  * @property string|null $gambar
@@ -31,7 +31,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $boleh_komentar
  * @property string|null $slug
  * @property int|null $hit
- * 
+ *
  * @property Config|null $config
  * @property Collection|Agenda[] $agendas
  *
@@ -39,58 +39,58 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Artikel extends Model
 {
-	protected $table = 'artikel';
-	public $timestamps = false;
-	protected $connection = "asal";
+    protected $table = 'artikel';
+    public $timestamps = false;
+    protected $connection = "asal";
 
-	protected $casts = [
-		'config_id' => 'int',
-		'enabled' => 'int',
-		'tgl_upload' => 'datetime',
-		'id_kategori' => 'int',
-		'id_user' => 'int',
-		'headline' => 'int',
-		'boleh_komentar' => 'bool',
-		'hit' => 'int'
-	];
+    protected $casts = [
+        'config_id' => 'int',
+        'enabled' => 'int',
+        'tgl_upload' => 'datetime',
+        'id_kategori' => 'int',
+        'id_user' => 'int',
+        'headline' => 'int',
+        'boleh_komentar' => 'bool',
+        'hit' => 'int'
+    ];
 
-	protected $fillable = [
-		'config_id',
-		'gambar',
-		'isi',
-		'enabled',
-		'tgl_upload',
-		'id_kategori',
-		'id_user',
-		'judul',
-		'headline',
-		'gambar1',
-		'gambar2',
-		'gambar3',
-		'dokumen',
-		'link_dokumen',
-		'boleh_komentar',
-		'slug',
-		'hit'
-	];
+    protected $fillable = [
+        'config_id',
+        'gambar',
+        'isi',
+        'enabled',
+        'tgl_upload',
+        'id_kategori',
+        'id_user',
+        'judul',
+        'headline',
+        'gambar1',
+        'gambar2',
+        'gambar3',
+        'dokumen',
+        'link_dokumen',
+        'boleh_komentar',
+        'slug',
+        'hit'
+    ];
 
-	public function config()
-	{
-		return $this->belongsTo(Config::class);
-	}
+    public function config()
+    {
+        return $this->belongsTo(Config::class);
+    }
 
-	public function agendas()
-	{
-		return $this->hasMany(Agenda::class, 'id_artikel');
-	}
+    public function agendas()
+    {
+        return $this->hasMany(Agenda::class, 'id_artikel', 'id');
+    }
 
-	public function users()
-	{
-		return $this->hasMany(User::class, 'id_user');
-	}
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_user');
+    }
 
-	public function kategori()
-	{
-		return $this->belongsTo(Kategori::class, 'id_kategori');
-	}
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'id_kategori');
+    }
 }

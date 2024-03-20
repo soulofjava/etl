@@ -87,11 +87,9 @@ class UCommand extends Command
         }
 
         $this->info('pindah table user');
-
-        Kategori::where('config_id',  $setConfigId)->delete();
-        Artikel::where('config_id',  $setConfigId)->delete();
+        TujuanUser::where('pamong_id', null)->where('config_id',  $setConfigId)->delete();
         $a = User::with(['user_grup', 'artikel' => function ($a) {
-            $a->with(['kategori']);
+            $a->with(['kategori', 'agendas']);
         }])->get();
         foreach ($a as $item) {
             if ($item->pamong_id == "") {
@@ -109,21 +107,29 @@ class UCommand extends Command
                     $user = TujuanUser::create($isianuser);
 
                     if ($item->artikel) {
+                        $this->info('aaa ');
                         foreach ($item->artikel as $arti) {
                             if ($arti->kategori) {
-                                $kate = Kategori::where('config_id',  $setConfigId)->where('slug', $arti->kategori->slug)->first();
-                                if ($kate == null) {
+                                $kate = Kategori::where('config_id',  $setConfigId)->where('kategori', $arti->kategori->kategori)->first();
+                                if (!$kate) {
                                     $isiankategori = Arr::except($arti->kategori->toArray(), ['id', 'slug']);
                                     $isiankategori['config_id'] = $setConfigId;
                                     $kate = Kategori::firstOrCreate($isiankategori);
                                 }
                             }
-
-                            $isianartikel = Arr::except($arti->toArray(), ['id', 'slug', 'id_kategori', 'id_user']);
+                            if ($arti->id_kategori != '999' && $arti->id_kategori != '1000') {
+                                $arti->id_kategori = $kate->id;
+                            }
+                            $isianartikel = Arr::except($arti->toArray(), ['id', 'slug', 'id_user']);
                             $isianartikel['config_id'] = $setConfigId;
                             $isianartikel['id_user'] = $user->id;
-                            $isianartikel['id_kategori'] = $kate->id ?? '999';
-                            $user->artikel()->create($isianartikel);
+                            $artikel = $user->artikel()->create($isianartikel);
+                            if ($arti->agendas) {
+                                foreach ($arti->agendas as $agenda) {
+                                    $isianagenda = Arr::except($agenda->toArray(), ['id', 'id_artikel']);
+                                    $artikel->agendas()->create($isianagenda);
+                                }
+                            }
                         }
                     }
                 }

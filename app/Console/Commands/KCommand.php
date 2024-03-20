@@ -183,5 +183,16 @@ class KCommand extends Command
             $isian['posyandu_id'] = $d_posyandu->id ?? null;
             TujuanIbuHamil::create($isian);
         }
+
+        echo 'pindah table kategori ';
+        $a = Kategori::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $item->slug = null;
+            $cek = TujuanKategori::where('config_id', $setConfigId)->where('kategori', $item->kategori)->first();
+            if (!$cek) {
+                TujuanKategori::create($item->toArray());
+            }
+        }
     }
 }

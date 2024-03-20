@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 /**
  * Class Artikel
- * 
+ *
  * @property int $id
  * @property int|null $config_id
  * @property string|null $gambar
@@ -32,7 +32,7 @@ use Illuminate\Support\Str;
  * @property bool $boleh_komentar
  * @property string|null $slug
  * @property int|null $hit
- * 
+ *
  * @property Config|null $config
  * @property Collection|Agenda[] $agendas
  *
@@ -40,94 +40,92 @@ use Illuminate\Support\Str;
  */
 class Artikel extends Model
 {
-	protected $table = 'artikel';
-	public $timestamps = false;
-	protected $connection = "tujuan";
+    protected $table = 'artikel';
+    public $timestamps = false;
+    protected $connection = "tujuan";
 
-	protected $casts = [
-		'config_id' => 'int',
-		'enabled' => 'int',
-		'tgl_upload' => 'datetime',
-		'id_kategori' => 'int',
-		'id_user' => 'int',
-		'headline' => 'int',
-		'boleh_komentar' => 'bool',
-		'hit' => 'int'
-	];
+    protected $casts = [
+        'config_id' => 'int',
+        'enabled' => 'int',
+        'tgl_upload' => 'datetime',
+        'id_kategori' => 'int',
+        'id_user' => 'int',
+        'headline' => 'int',
+        'boleh_komentar' => 'bool',
+        'hit' => 'int'
+    ];
 
-	protected $fillable = [
-		'config_id',
-		'gambar',
-		'isi',
-		'enabled',
-		'tgl_upload',
-		'id_kategori',
-		'id_user',
-		'judul',
-		'headline',
-		'gambar1',
-		'gambar2',
-		'gambar3',
-		'dokumen',
-		'link_dokumen',
-		'boleh_komentar',
-		'slug',
-		'hit'
-	];
+    protected $fillable = [
+        'config_id',
+        'gambar',
+        'isi',
+        'enabled',
+        'tgl_upload',
+        'id_kategori',
+        'id_user',
+        'judul',
+        'headline',
+        'gambar1',
+        'gambar2',
+        'gambar3',
+        'dokumen',
+        'link_dokumen',
+        'boleh_komentar',
+        'slug',
+        'hit'
+    ];
 
-	public function config()
-	{
-		return $this->belongsTo(Config::class);
-	}
+    public function config()
+    {
+        return $this->belongsTo(Config::class);
+    }
 
-	public function agendas()
-	{
-		return $this->hasMany(Agenda::class, 'id_artikel');
-	}
+    public function agendas()
+    {
+        return $this->hasMany(Agenda::class, 'id_artikel', 'id');
+    }
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_user');
+    }
 
+    public function kategori()
+    {
+        return $this->hasMany(Kategori::class, 'id', 'id_kategori');
+    }
 
-	public function users()
-	{
-		return $this->hasMany(User::class, 'id_user');
-	}
+    public function generateSlug()
+    {
+        $baseSlug = Str::slug($this->judul);
+        $slug = $baseSlug;
+        $count = 1;
 
-	public function kategori()
-	{
-		return $this->hasMany(Kategori::class, 'id', 'id_kategori');
-	}
+        while ($this->slugExists($slug, $this->id)) {
+            $slug = $baseSlug . '-' . $count;
+            $count++;
+        }
 
-	public function generateSlug()
-	{
-		$baseSlug = Str::slug($this->judul);
-		$slug = $baseSlug;
-		$count = 1;
+        $this->slug = $slug;
+    }
 
-		while ($this->slugExists($slug, $this->id)) {
-			$slug = $baseSlug . '-' . $count;
-			$count++;
-		}
+    private function slugExists($slug, $currentId = null)
+    {
+        $query = static::where('slug', $slug);
 
-		$this->slug = $slug;
-	}
+        if ($currentId !== null) {
+            $query->where('id', '!=', $currentId);
+        }
 
-	private function slugExists($slug, $currentId = null)
-	{
-		$query = static::where('slug', $slug);
+        return $query->exists();
+    }
 
-		if ($currentId !== null) {
-			$query->where('id', '!=', $currentId);
-		}
+    protected static function boot()
+    {
+        parent::boot();
 
-		return $query->exists();
-	}
-
-	protected static function boot()
-	{
-		parent::boot();
-
-		static::creating(function ($post) {
-			$post->generateSlug();
-		});
-	}
+        static::creating(function ($post) {
+            $post->generateSlug();
+        });
+    }
 }

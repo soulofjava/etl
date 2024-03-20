@@ -32,6 +32,7 @@ return new class extends Migration
             $table->boolean('boleh_komentar')->default(true);
             $table->string('slug', 200)->nullable();
             $table->integer('hit')->nullable()->default(0);
+            $table->tinyInteger('slider')->nullable()->default(0);
         });
     }
 

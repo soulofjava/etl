@@ -7,6 +7,7 @@ use App\Models\Asal\TwebKeluarga as AsalKeluarga;
 use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
+use App\Models\Tujuan\Artikel;
 use App\Models\Tujuan\Dtk;
 use App\Models\Tujuan\DtksLampiran;
 use App\Models\Tujuan\Kategori;
@@ -219,6 +220,8 @@ class KeluargaCommand extends Command
             }
             ProgramPesertum::where('config_id',  $setConfigId)->delete();
             DtksLampiran::where('config_id', $setConfigId)->delete();
+            Artikel::where('config_id',  $setConfigId)->delete();
+            Kategori::where('config_id', $setConfigId)->delete();
             $data = AsalKeluarga::with(['penduduk' => function ($a) {
                 $a->with(['dtks', 'dtks_anggota', 'rtm', 'pelapak' => function ($b) {
                     $b->with(['produks' => function ($c) {
@@ -229,7 +232,7 @@ class KeluargaCommand extends Command
                 }, 'log_penduduk', 'log_perubahan_penduduk', 'twebdesapamong' => function ($f) {
                     $f->with(['refjabatan', 'user' => function ($i) {
                         $i->with(['user_grup', 'artikel' => function ($j) {
-                            $j->with(['kategori']);
+                            $j->with(['kategori', 'agendas']);
                         }]);
                     }]);
                 }, 'suplemen_terdata' => function ($h) {
@@ -388,7 +391,7 @@ class KeluargaCommand extends Command
 
                         //masukkan user dan user_grup
                         if ($penduduk->twebdesapamong->user) {
-                            $isianusergrup = UserGrup::where('config_id',  $setConfigId)->where('slug', $penduduk->twebdesapamong->user->user_grup->slug)->first();
+                            $isianusergrup = UserGrup::where('config_id',  $setConfigId)->where('nama', $penduduk->twebdesapamong->user->user_grup->nama)->first();
                             if ($isianusergrup == null) {
                                 $isianusergrup = Arr::except($penduduk->twebdesapamong->user->user_grup->toArray(), ['id', 'slug']);
                                 $isianusergrup['config_id'] = $setConfigId;
@@ -403,21 +406,30 @@ class KeluargaCommand extends Command
 
                             // masukkan artikel
                             if ($penduduk->twebdesapamong->user->artikel) {
+                                $this->info('masuk artikel');
                                 foreach ($penduduk->twebdesapamong->user->artikel as $arti) {
                                     if ($arti->kategori) {
-                                        $kate = Kategori::where('config_id',  $setConfigId)->where('slug', $arti->kategori->slug)->first();
-                                        if ($kate == null) {
+                                        $kate = Kategori::where('config_id',  $setConfigId)->where('kategori', $arti->kategori->kategori)->first();
+                                        if (!$kate) {
                                             $isiankategori = Arr::except($arti->kategori->toArray(), ['id', 'slug']);
                                             $isiankategori['config_id'] = $setConfigId;
                                             $kate = Kategori::firstOrCreate($isiankategori);
                                         }
                                     }
 
-                                    $isianartikel = Arr::except($arti->toArray(), ['id', 'slug', 'id_kategori', 'id_user']);
+                                    if ($arti->id_kategori != '999' && $arti->id_kategori != '1000') {
+                                        $arti->id_kategori = $kate->id;
+                                    }
+                                    $isianartikel = Arr::except($arti->toArray(), ['id', 'slug', 'id_user']);
                                     $isianartikel['config_id'] = $setConfigId;
                                     $isianartikel['id_user'] = $user->id;
-                                    $isianartikel['id_kategori'] = $kate->id ?? '999';
-                                    $user->artikel()->create($isianartikel);
+                                    $artikel = $user->artikel()->create($isianartikel);
+                                    if ($arti->agendas) {
+                                        foreach ($arti->agendas as $agenda) {
+                                            $isianagenda = Arr::except($agenda->toArray(), ['id', 'id_artikel']);
+                                            $artikel->agendas()->create($isianagenda);
+                                        }
+                                    }
                                 }
                             }
                         }
