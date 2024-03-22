@@ -69,6 +69,7 @@ class UCommand extends Command
 
             if ($item->log_surat) {
                 $id_format_surat = TwebSuratFormat::where('id', $item->log_surat->id_format_surat)->first();
+                $this->info($id_format_surat->url_surat);
                 $d_id_format_surat = TujuanTwebSuratFormat::where('config_id', $setConfigId)->where('url_surat', $id_format_surat->url_surat)->first();
                 $id_pend = TwebPenduduk::where('id', $item->log_surat->id_pend)->first();
                 $d_id_pend = TujuanTwebPenduduk::where('nik', $id_pend->nik)->first();
