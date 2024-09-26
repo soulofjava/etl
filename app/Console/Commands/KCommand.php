@@ -13,6 +13,7 @@ use App\Models\Asal\KehadiranJamKerja;
 use App\Models\Asal\Kelompok;
 use App\Models\Asal\KelompokMaster;
 use App\Models\Asal\Kium;
+use App\Models\Asal\KlasifikasiSurat;
 use App\Models\Asal\Posyandu;
 use App\Models\Asal\TwebPenduduk;
 use App\Models\Tujuan\Config as TujuanConfig;
@@ -25,6 +26,7 @@ use App\Models\Tujuan\KehadiranJamKerja as TujuanKehadiranJamKerja;
 use App\Models\Tujuan\Kelompok as TujuanKelompok;
 use App\Models\Tujuan\KelompokMaster as TujuanKelompokMaster;
 use App\Models\Tujuan\Kium as TujuanKium;
+use App\Models\Tujuan\KlasifikasiSurat as TujuanKlasifikasiSurat;
 use App\Models\Tujuan\Posyandu as TujuanPosyandu;
 use App\Models\Tujuan\TwebPenduduk as TujuanTwebPenduduk;
 use Illuminate\Support\Arr;
@@ -117,10 +119,12 @@ class KCommand extends Command
             if ($item->kelompoks) {
                 foreach ($item->kelompoks as $kel) {
                     $ket = TwebPenduduk::where('id', $kel->id_ketua)->first();
-                    $d_ket = TujuanTwebPenduduk::where('nik', $ket->nik)->first();
+                    $d_ket = TujuanTwebPenduduk::where('nik', $ket->nik ?? 0)->first();
                     $isiankel = Arr::except($kel->toArray(), ['id_master', 'id_ketua']);
                     $isiankel['id_master'] = $id_master->id;
-                    $isiankel['id_ketua'] = $d_ket->id;
+                    $isiankel['id_ketua'] = $d_ket->id ?? null;
+                    $isiankel['slug'] = null;
+                    $isiankel['config_id'] = $setConfigId;
                     TujuanKelompok::create($isiankel);
                 }
             }
@@ -192,6 +196,16 @@ class KCommand extends Command
             $cek = TujuanKategori::where('config_id', $setConfigId)->where('kategori', $item->kategori)->first();
             if (!$cek) {
                 TujuanKategori::create($item->toArray());
+            }
+        }
+        echo 'pindah table klasifikasi surat ';
+        $a = KlasifikasiSurat::all();
+        foreach ($a as $item) {
+            $item->config_id = $setConfigId;
+            $item->slug = null;
+            $cek = TujuanKlasifikasiSurat::where('config_id', $setConfigId)->where('kode', $item->kode)->first();
+            if (!$cek) {
+                TujuanKlasifikasiSurat::create($item->toArray());
             }
         }
     }

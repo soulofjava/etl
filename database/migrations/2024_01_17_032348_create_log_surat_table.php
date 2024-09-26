@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('config_id')->nullable()->index('log_surat_config_fk');
             $table->integer('id_format_surat');
             $table->integer('id_pend')->nullable();
-            $table->integer('id_pamong');
+            $table->integer('id_pamong')->nullable();
             $table->string('nama_pamong', 100)->nullable()->comment('Nama pamong agar tidak berubah saat ada perubahan di master pamong');
             $table->string('nama_jabatan', 100)->nullable();
             $table->integer('id_user');

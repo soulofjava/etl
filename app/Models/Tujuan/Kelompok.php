@@ -8,10 +8,11 @@ namespace App\Models\Tujuan;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class Kelompok
- * 
+ *
  * @property int $id
  * @property int $id_lama
  * @property int|null $config_id
@@ -22,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $keterangan
  * @property string $kode
  * @property string|null $tipe
- * 
+ *
  * @property Config|null $config
  * @property KelompokMaster $kelompok_master
  * @property Collection|KelompokAnggotum[] $kelompok_anggota
@@ -31,41 +32,76 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Kelompok extends Model
 {
-	protected $table = 'kelompok';
-	public $timestamps = false;
-	protected $connection = "tujuan";
+    protected $table = 'kelompok';
+    public $timestamps = false;
+    protected $connection = "tujuan";
 
-	protected $casts = [
-		'config_id' => 'int',
-		'id_master' => 'int',
-		'id_ketua' => 'int',
-		'id_lama' => 'int'
-	];
+    protected $casts = [
+        'config_id' => 'int',
+        'id_master' => 'int',
+        'id_ketua' => 'int',
+        'id_lama' => 'int'
+    ];
 
-	protected $fillable = [
-		'id_lama',
-		'config_id',
-		'id_master',
-		'id_ketua',
-		'nama',
-		'slug',
-		'keterangan',
-		'kode',
-		'tipe'
-	];
+    protected $fillable = [
+        'id_lama',
+        'config_id',
+        'id_master',
+        'id_ketua',
+        'nama',
+        'slug',
+        'keterangan',
+        'kode',
+        'tipe'
+    ];
 
-	public function config()
-	{
-		return $this->belongsTo(Config::class);
-	}
+    public function config()
+    {
+        return $this->belongsTo(Config::class);
+    }
 
-	public function kelompok_master()
-	{
-		return $this->belongsTo(KelompokMaster::class, 'id_master');
-	}
+    public function kelompok_master()
+    {
+        return $this->belongsTo(KelompokMaster::class, 'id_master');
+    }
 
-	public function kelompok_anggota()
-	{
-		return $this->hasMany(KelompokAnggotum::class, 'id_kelompok');
-	}
+    public function kelompok_anggota()
+    {
+        return $this->hasMany(KelompokAnggotum::class, 'id_kelompok');
+    }
+
+
+    public function generateSlug()
+    {
+        $baseSlug = Str::slug($this->nama);
+        $slug = $baseSlug;
+        $count = 1;
+
+        while ($this->slugExists($slug, $this->id)) {
+            $slug = $baseSlug . '-' . $count;
+            $count++;
+        }
+
+        $this->slug = $slug;
+    }
+
+    private function slugExists($slug, $currentId = null)
+    {
+        $query = static::where('slug', $slug);
+
+        if ($currentId !== null) {
+            $query->where('id', '!=', $currentId);
+        }
+
+        return $query->exists();
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($post) {
+            $post->generateSlug();
+        });
+    }
 }

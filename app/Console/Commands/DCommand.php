@@ -11,6 +11,7 @@ use App\Models\Asal\Dtk;
 use App\Models\Asal\DtksAnggotum;
 use App\Models\Asal\DtksLampiran;
 use App\Models\Asal\DtksPengaturanProgram;
+use App\Models\Asal\Program;
 use App\Models\Asal\SuratMasuk;
 use App\Models\Asal\TwebDesaPamong;
 use App\Models\Tujuan\Config as TujuanConfig;
@@ -21,6 +22,7 @@ use App\Models\Tujuan\Dtk as TujuanDtk;
 use App\Models\Tujuan\DtksAnggotum as TujuanDtksAnggotum;
 use App\Models\Tujuan\DtksLampiran as TujuanDtksLampiran;
 use App\Models\Tujuan\DtksPengaturanProgram as TujuanDtksPengaturanProgram;
+use App\Models\Tujuan\Program as TujuanProgram;
 use App\Models\Tujuan\SuratMasuk as TujuanSuratMasuk;
 use App\Models\Tujuan\TwebDesaPamong as TujuanTwebDesaPamong;
 
@@ -69,11 +71,11 @@ class DCommand extends Command
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
             $id_surat_masuk = SuratMasuk::where('id', $item->id_surat_masuk)->first();
-            $d_id_surat_masuk = TujuanSuratMasuk::where('nomor_surat', $id_surat_masuk->nomor_surat)->where('pengirim', $id_surat_masuk->pengirim)->first();
-            $id_desa_pamong = TwebDesaPamong::where('pamong_id', $item->id_desa_pamong)->first();
-            $d_id_desa_pamong = TujuanTwebDesaPamong::where('pamong_nik', $id_desa_pamong->pamong_nik)->first();
-            $item->id_surat_masuk = $d_id_surat_masuk->id;
-            $item->id_desa_pamong = $d_id_desa_pamong->id;
+            $d_id_surat_masuk = TujuanSuratMasuk::where('nomor_surat', $id_surat_masuk->nomor_surat)->where('pengirim', $id_surat_masuk->pengirim ?? 0)->first();
+            $id_desa_pamong = TwebDesaPamong::where('pamong_id', $item->id_desa_pamong ?? 0)->first();
+            $d_id_desa_pamong = TujuanTwebDesaPamong::where('pamong_nik', $id_desa_pamong->pamong_nik ?? 0)->first();
+            $item->id_surat_masuk = $d_id_surat_masuk->id ?? null;
+            $item->id_desa_pamong = $d_id_desa_pamong->id ?? null;
             TujuanDisposisiSuratMasuk::create($item->toArray());
         }
         $this->info('pindah table Dokuman');
@@ -110,7 +112,10 @@ class DCommand extends Command
         $a = DtksPengaturanProgram::all();
         TujuanDtksPengaturanProgram::where('config_id', $setConfigId)->delete();
         foreach ($a as $item) {
+            $bantuan = Program::find($item->id_bantuan);
+            $tujuan_bantuan = TujuanProgram::where('nama', $bantuan->nama)->where('config_id', $setConfigId)->first();
             $item->config_id = $setConfigId;
+            $item->id_bantuan = $tujuan_bantuan->id;
             TujuanDtksPengaturanProgram::create($item->toArray());
         }
     }

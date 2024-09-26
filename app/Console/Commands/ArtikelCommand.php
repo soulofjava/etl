@@ -69,6 +69,12 @@ class ArtikelCommand extends Command
                     $a->agendas()->create($isiagenda);
                     $this->info('pindah data agenda');
                 }
+                foreach ($asal->komentar ?? [] as $komentar) {
+                    $isikomentar =  Arr::except($komentar->toArray(), ['id']);
+                    $isikomentar['config_id'] =   $setConfigId;
+                    $a->komentars()->create($isikomentar);
+                    $this->info('pindah data komentar');
+                }
             }
         });
     }

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->integer('id_lama')->nullable();
 
             $table->unique(['config_id', 'slug'], 'slug_config');
-            $table->unique(['config_id', 'kode'], 'kode_config');
+            // $table->unique(['config_id', 'kode'], 'kode_config');
         });
     }
 

@@ -149,9 +149,14 @@ class TCommand extends Command
         TujuanTwebSuratFormat::where('config_id',  $setConfigId)->delete();
         $aa = TwebSuratFormat::with('log_surat')->get();
         foreach ($aa as $asal) {
-            $isiantwebsuratformat = Arr::except($asal->toArray(), ['id']);
-            $isiantwebsuratformat['config_id'] = $setConfigId;
-            $fs = TujuanTwebSuratFormat::create($isiantwebsuratformat);
+            $cektwesuratformat = TujuanTwebSuratFormat::where('url_surat')->first();
+            if (!$cektwesuratformat) {
+                $isiantwebsuratformat = Arr::except($asal->toArray(), ['id']);
+                $isiantwebsuratformat['config_id'] = $setConfigId;
+                $fs = TujuanTwebSuratFormat::create($isiantwebsuratformat);
+            } else {
+                $fs = $cektwesuratformat;
+            }
 
             if ($asal->log_surat) {
                 foreach ($asal->log_surat as $item) {
@@ -160,26 +165,26 @@ class TCommand extends Command
                         $d_id_pend = TujuanTwebPenduduk::where('nik', $id_pend->nik)->first();
                     }
                     $id_pamong = TwebDesaPamong::where('pamong_id', $item->id_pamong)->first();
-                    $id_pend_pamong = TwebPenduduk::where('id', $id_pamong->id_pend)->first();
-                    $d_id_pend_pamong = TujuanTwebPenduduk::where('nik', $id_pend_pamong->nik)->first();
-                    $d_id_pamong = TujuanTwebDesaPamong::where('id_pend', $d_id_pend_pamong->id)->first();
+                    $id_pend_pamong = TwebPenduduk::where('id', $id_pamong->id_pend ?? 0)->first();
+                    $d_id_pend_pamong = TujuanTwebPenduduk::where('nik', $id_pend_pamong->nik ?? 0)->first();
+                    $d_id_pamong = TujuanTwebDesaPamong::where('id_pend', $d_id_pend_pamong->id ?? 0)->first();
 
                     $isianlogsurat = Arr::except($item->toArray(), ['id', 'urls_id', 'id_format_surat']);
                     $isianlogsurat['config_id'] = $setConfigId;
                     $isianlogsurat['id_pend'] = $d_id_pend->id ?? null;
-                    $isianlogsurat['id_pamong'] = $d_id_pamong->pamong_id;
+                    $isianlogsurat['id_pamong'] = $d_id_pamong->pamong_id ?? null;
                     $fs->log_surat()->create($isianlogsurat);
                 }
             }
         }
 
-        $this->info('pindah table tweb_wil_clusterdesa');
-        TujuanTwebWilClusterdesa::where('config_id',  $setConfigId)->delete();
-        $a = TwebWilClusterdesa::all();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            TujuanTwebWilClusterdesa::create($item->toArray());
-        }
+        // $this->info('pindah table tweb_wil_clusterdesa');
+        // TujuanTwebWilClusterdesa::where('config_id',  $setConfigId)->delete();
+        // $a = TwebWilClusterdesa::all();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     TujuanTwebWilClusterdesa::create($item->toArray());
+        // }
 
         //insert yang tidak menggunakan config_id
         $this->info('pindah table tweb_aset');

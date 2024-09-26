@@ -7,6 +7,8 @@ use App\Models\Asal\TwebKeluarga as AsalKeluarga;
 use App\Models\Tujuan\TwebKeluarga as TujuanKeluarga;
 use App\Models\Tujuan\Config as TujuanConfig;
 use App\Models\Asal\Config;
+use App\Models\Asal\TwebPenduduk as AsalTwebPenduduk;
+use App\Models\Asal\TwebWilClusterdesa;
 use App\Models\Tujuan\Artikel;
 use App\Models\Tujuan\Dtk;
 use App\Models\Tujuan\DtksLampiran;
@@ -27,6 +29,7 @@ use App\Models\Tujuan\TwebDesaPamong;
 use App\Models\Tujuan\TwebPenduduk;
 use App\Models\Tujuan\TwebPendudukMandiri;
 use App\Models\Tujuan\TwebRtm;
+use App\Models\Tujuan\TwebWilClusterdesa as TujuanTwebWilClusterdesa;
 use App\Models\Tujuan\UserGrup;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Artisan;
@@ -218,6 +221,15 @@ class KeluargaCommand extends Command
             } else {
                 $this->info('hapus log SURAT gagal');
             }
+
+            $this->info('pindah table tweb_wil_clusterdesa');
+            TujuanTwebWilClusterdesa::where('config_id',  $setConfigId)->delete();
+            $a = TwebWilClusterdesa::all();
+            foreach ($a as $item) {
+                $item->config_id = $setConfigId;
+                TujuanTwebWilClusterdesa::create($item->toArray());
+            }
+
             ProgramPesertum::where('config_id',  $setConfigId)->delete();
             DtksLampiran::where('config_id', $setConfigId)->delete();
             Artikel::where('config_id',  $setConfigId)->delete();
@@ -243,15 +255,38 @@ class KeluargaCommand extends Command
             $this->info('mulai input keluarga');
 
             foreach ($data as $asal) {
+                //membuat cluster_desa
+                $idclusterdesa = TwebWilClusterdesa::find($asal->id_cluster);
+                if ($idclusterdesa) {
+                    $idclusterdesatujuan = TujuanTwebWilClusterdesa::where(['dusun' => $idclusterdesa->dusun, 'rw' => $idclusterdesa->rw, 'rt' => $idclusterdesa->rt])->first();
+                    if (!$idclusterdesatujuan) {
+                        $idclusterdesa = Arr::except($idclusterdesa->toArray(), ['id', 'id_cluster']);
+                        $idclusterdesa['config_id'] = $setConfigId;
+                        $idclusterdesatujuan =  TujuanTwebWilClusterdesa::create($idclusterdesa);
+                    }
+                }
 
-                $asalnya = Arr::except($asal->toArray(), ['id']);
+                $asalnya = Arr::except($asal->toArray(), ['id', 'id_cluster']);
+                $asalnya['id_cluster'] =   $idclusterdesatujuan->id ?? NULL;
                 $asalnya['config_id'] =   $setConfigId;
                 $a = TujuanKeluarga::create($asalnya);
 
                 $this->info('mulai input penduduk');
                 foreach ($asal->penduduk as $penduduk) {
+
+                    $pi_dclusterdesa = TwebWilClusterdesa::find($penduduk->id_cluster);
+                    if ($pi_dclusterdesa) {
+                        $pi_dclusterdesatujuan = TujuanTwebWilClusterdesa::where(['dusun' => $pi_dclusterdesa->dusun, 'rw' => $pi_dclusterdesa->rw, 'rt' => $pi_dclusterdesa->rt])->first();
+                        if (!$pi_dclusterdesatujuan) {
+                            $pi_dclusterdesa = Arr::except($pi_dclusterdesa->toArray(), ['id', 'id_cluster']);
+                            $pi_dclusterdesa['config_id'] = $setConfigId;
+                            $pi_dclusterdesatujuan =  TujuanTwebWilClusterdesa::create($pi_dclusterdesa);
+                        }
+                    }
+
                     $isian = $penduduk->toArray();
-                    $isian = Arr::except($isian, ['id_kk', 'dtks', 'dtks_anggota', 'id', 'rtm', 'pelapak']);
+                    $isian = Arr::except($isian, ['id_kk', 'dtks', 'dtks_anggota', 'id', 'rtm', 'pelapak', 'id_cluster']);
+                    $isian['id_cluster'] =   $pi_dclusterdesatujuan->id ?? NULL;
                     $isian['config_id'] =  $setConfigId;
 
                     $pendu =  $a->penduduk()->create($isian);
@@ -391,16 +426,18 @@ class KeluargaCommand extends Command
 
                         //masukkan user dan user_grup
                         if ($penduduk->twebdesapamong->user) {
-                            $isianusergrup = UserGrup::where('config_id',  $setConfigId)->where('nama', $penduduk->twebdesapamong->user->user_grup->nama)->first();
+                            $isianusergrup = UserGrup::where('config_id',  $setConfigId)->where('nama', $penduduk->twebdesapamong->user->user_grup->nama ?? 'Administrator')->first();
                             if ($isianusergrup == null) {
-                                $isianusergrup = Arr::except($penduduk->twebdesapamong->user->user_grup->toArray(), ['id', 'slug']);
-                                $isianusergrup['config_id'] = $setConfigId;
-                                $isianusergrup = UserGrup::firstOrCreate($isianusergrup);
+                                if ($penduduk->twebdesapamong->user->user_grup) {
+                                    $isianusergrup = Arr::except($penduduk->twebdesapamong->user->user_grup->toArray(), ['id', 'slug']);
+                                    $isianusergrup['config_id'] = $setConfigId;
+                                    $isianusergrup = UserGrup::firstOrCreate($isianusergrup);
+                                }
                             }
 
                             $isianuser = Arr::except($penduduk->twebdesapamong->user->toArray(), ['id', 'id_grup']);
                             $isianuser['config_id'] = $setConfigId;
-                            $isianuser['id_grup'] = $isianusergrup->id;
+                            $isianuser['id_grup'] = $isianusergrup->id ?? 0;
                             $isianuser['pamong_id'] = $pamo->id;
                             $user = $pendu->twebdesapamong->user()->create($isianuser);
 
@@ -517,9 +554,8 @@ class KeluargaCommand extends Command
         Artisan::call('app:n-command');
         $this->info('panggil o command');
         Artisan::call('app:o-command');
-        $this->info('panggil p command');
-        Artisan::call('app:p-command');
         $this->info('panggil w command');
         Artisan::call('app:w-command');
+        Artisan::call('gawean:asu');
     }
 }

@@ -69,20 +69,20 @@ class UCommand extends Command
 
             if ($item->log_surat) {
                 $id_format_surat = TwebSuratFormat::where('id', $item->log_surat->id_format_surat)->first();
-                $this->info($id_format_surat->url_surat);
-                $d_id_format_surat = TujuanTwebSuratFormat::where('config_id', $setConfigId)->where('url_surat', $id_format_surat->url_surat)->first();
+                // $this->info($id_format_surat->url_surat);
+                $d_id_format_surat = TujuanTwebSuratFormat::where('config_id', $setConfigId)->where('url_surat', $id_format_surat->url_surat ?? 0)->first();
                 $id_pend = TwebPenduduk::where('id', $item->log_surat->id_pend)->first();
-                $d_id_pend = TujuanTwebPenduduk::where('nik', $id_pend->nik)->first();
+                $d_id_pend = TujuanTwebPenduduk::where('nik', $id_pend->nik ?? 0)->first();
                 $id_pamong = TwebDesaPamong::where('pamong_id', $item->log_surat->id_pamong)->first();
                 $id_pend_pamong = TwebPenduduk::where('id', $id_pamong->id_pend)->first();
-                $d_id_pend_pamong = TujuanTwebPenduduk::where('nik', $id_pend_pamong->nik)->first();
+                $d_id_pend_pamong = TujuanTwebPenduduk::where('nik', $id_pend_pamong->nik ?? 0)->first();
                 $d_id_pamong = TujuanTwebDesaPamong::where('id_pend', $d_id_pend_pamong->id)->first();
 
                 $isianlogsurat = Arr::except($item->log_surat->toArray(), ['id', 'urls_id']);
                 $isianlogsurat['config_id'] = $setConfigId;
                 $isianlogsurat['id_format_surat'] = $d_id_format_surat->id ?? null;
                 $isianlogsurat['id_pend'] = $d_id_pend->id ?? null;
-                $isianlogsurat['id_pamong'] = $d_id_pamong->pamong_id;
+                $isianlogsurat['id_pamong'] = $d_id_pamong->pamong_id ?? null;
                 $urls_id->log_surat()->create($isianlogsurat);
             }
         }
@@ -117,9 +117,10 @@ class UCommand extends Command
                                     $isiankategori['config_id'] = $setConfigId;
                                     $kate = Kategori::firstOrCreate($isiankategori);
                                 }
-                            }
-                            if ($arti->id_kategori != '999' && $arti->id_kategori != '1000') {
-                                $arti->id_kategori = $kate->id;
+
+                                if ($arti->id_kategori != '999' && $arti->id_kategori != '1000') {
+                                    $arti->id_kategori = $kate->id;
+                                }
                             }
                             $isianartikel = Arr::except($arti->toArray(), ['id', 'slug', 'id_user']);
                             $isianartikel['config_id'] = $setConfigId;

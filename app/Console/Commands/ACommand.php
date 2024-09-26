@@ -151,15 +151,15 @@ class ACommand extends Command
             }
         }
 
-        echo 'pindah table AnalisisPeriode';
-        $a = AnalisisPeriode::all();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            $cek = TujuanAnalisisPeriode::where('config_id', $setConfigId)->where('id_master', $item->id_master)->first();
-            if (!$cek) {
-                TujuanAnalisisPeriode::create($item->toArray());
-            }
-        }
+        // echo 'pindah table AnalisisPeriode';
+        // $a = AnalisisPeriode::all();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     $cek = TujuanAnalisisPeriode::where('config_id', $setConfigId)->where('id_master', $item->id_master)->first();
+        //     if (!$cek) {
+        //         TujuanAnalisisPeriode::create($item->toArray());
+        //     }
+        // }
 
         echo 'pindah table AnalisisRespon';
         $a = AnalisisRespon::all();
