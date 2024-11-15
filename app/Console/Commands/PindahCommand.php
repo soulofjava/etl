@@ -61,13 +61,14 @@ class PindahCommand extends Command
             }
         }
         $this->info('pindah table artikel');
-        $a = Artikel::all();
+        $a = Artikel::with(['agendas', 'kategori', 'komentar'])->get();
         foreach ($a as $item) {
             $item->config_id = $setConfigId;
-            //cek 
+            //cek
             $cek = TujuanArtikel::where('config_id', $setConfigId)->where('slug', $item->slug)->first();
             if (!$cek) {
-                TujuanArtikel::create($item->toArray());
+               $a = TujuanArtikel::create($item->toArray());
+
             }
         }
         $this->info('pindah table agenda');

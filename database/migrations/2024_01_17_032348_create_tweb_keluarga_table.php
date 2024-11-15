@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('kelas_sosial')->nullable();
             $table->dateTime('tgl_cetak_kk')->nullable();
             $table->string('alamat', 200)->nullable();
-            $table->integer('id_cluster');
+            $table->integer('id_cluster')->nullable();
             $table->timestamp('updated_at')->useCurrent();
             $table->integer('updated_by');
 

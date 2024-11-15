@@ -39,7 +39,7 @@ return new class extends Migration
             $table->string('nama_ibu', 100)->nullable();
             $table->string('foto', 100)->nullable();
             $table->integer('golongan_darah_id')->nullable();
-            $table->integer('id_cluster');
+            $table->integer('id_cluster')->nullable();
             $table->unsignedInteger('status')->nullable();
             $table->string('alamat_sebelumnya', 200)->nullable();
             $table->string('alamat_sekarang', 200)->nullable();

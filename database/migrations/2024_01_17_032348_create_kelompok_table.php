@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('id', true);
             $table->integer('config_id')->nullable();
             $table->integer('id_master')->index('id_master');
-            $table->integer('id_ketua')->index('id_ketua');
+            $table->integer('id_ketua')->index('id_ketua')->nullable();
             $table->string('nama', 50);
             $table->string('slug')->nullable();
             $table->string('keterangan', 300)->nullable();

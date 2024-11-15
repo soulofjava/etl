@@ -257,6 +257,7 @@ class KeluargaCommand extends Command
             foreach ($data as $asal) {
                 //membuat cluster_desa
                 $idclusterdesa = TwebWilClusterdesa::find($asal->id_cluster);
+                // dd( $asal->id_cluster);
                 if ($idclusterdesa) {
                     $idclusterdesatujuan = TujuanTwebWilClusterdesa::where(['dusun' => $idclusterdesa->dusun, 'rw' => $idclusterdesa->rw, 'rt' => $idclusterdesa->rt])->first();
                     if (!$idclusterdesatujuan) {
@@ -556,6 +557,7 @@ class KeluargaCommand extends Command
         Artisan::call('app:o-command');
         $this->info('panggil w command');
         Artisan::call('app:w-command');
+        $this->info('panggil gawean:asu');
         Artisan::call('gawean:asu');
     }
 }
