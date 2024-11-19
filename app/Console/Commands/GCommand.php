@@ -96,15 +96,15 @@ class GCommand extends Command
             }
         }
 
-        $this->info('pindah table SettingModul');
-        $a = SettingModul::all();
-        foreach ($a as $item) {
-            $item->config_id = $setConfigId;
-            $cek = TujuanSettingModul::where('config_id', $setConfigId)->where('slug', $item->slug)->first();
-            if (!$cek) {
-                TujuanSettingModul::create($item->toArray());
-            }
-        }
+        // $this->info('pindah table SettingModul');
+        // $a = SettingModul::all();
+        // foreach ($a as $item) {
+        //     $item->config_id = $setConfigId;
+        //     $cek = TujuanSettingModul::where('config_id', $setConfigId)->where('slug', $item->slug)->first();
+        //     if (!$cek) {
+        //         TujuanSettingModul::create($item->toArray());
+        //     }
+        // }
 
         // $this->info('pindah table GrupAkses');
         // $a = GrupAkse::all();

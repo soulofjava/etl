@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('agenda', function (Blueprint $table) {
             $table->foreign(['config_id'], 'agenda_config_fk')->references(['id'])->on('config')->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->foreign(['id_artikel'], 'id_artikel_fk')->references(['id'])->on('artikel')->onUpdate('CASCADE')->onDelete('CASCADE');
+            // $table->foreign(['id_artikel'], 'id_artikel_fk')->references(['id'])->on('artikel')->onUpdate('CASCADE')->onDelete('CASCADE');
         });
     }
 

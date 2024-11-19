@@ -3,16 +3,16 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Tujuan\Config as TujuanConfig;
-use App\Models\Asal\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Arr;
+use App\Models\Asal\Config as AsalConfig;
+use App\Models\Tujuan\Config as TujuanConfig;
+use App\Models\Asal\SettingModul as AsalSettingModul;
+use App\Models\Tujuan\SettingModul as TujuanSettingModul;
 use App\Models\Asal\GrupAkse as AsalGrupAkse;
+use App\Models\Tujuan\GrupAkse as TujuanGrupAkse;
 use App\Models\Asal\UserGrup as AsalUserGrup;
 use App\Models\Tujuan\UserGrup as TujuanUserGrup;
-use App\Models\Asal\SettingModul as AsalSettingModul;
-use App\Models\Tujuan\GrupAkse as TujuanGrupAkse;
-use App\Models\Tujuan\SettingModul as TujuanSettingModul;
-use Illuminate\Support\Arr;
 
 class GroupAksesCommand extends Command
 {
@@ -28,7 +28,7 @@ class GroupAksesCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sinkronisasi data config, setting_modul, user_grup, dan grup_akses antar database.';
 
     /**
      * Execute the console command.
@@ -36,105 +36,84 @@ class GroupAksesCommand extends Command
     public function handle()
     {
         DB::transaction(function () {
-            $setConfigId = '';
-            $this->info('pindah table config');
-            $config = Config::all();
-            foreach ($config as $item) {
-                // $item->config_id = $setConfigId;
-                //cek dulu config nya
-                $cek = TujuanConfig::where('app_key', $item->app_key)->first();
-                $this->info($item->app_key);
-                if (!$cek) {
-                    $this->info('app tidak ditemukan');
-                    $a = TujuanConfig::create($item->toArray());
-                    $setConfigId = $a->id;
+            $this->info('Sinkronisasi dimulai...');
+
+            $setConfigId = null;
+            $idMappingModul = [];
+            $idMappingUserGrup = [];
+
+            // 1. Sinkronisasi Config
+            $this->info('Sinkronisasi tabel config...');
+            $configAsal = AsalConfig::all();
+            foreach ($configAsal as $config) {
+                $cekConfig = TujuanConfig::where('app_key', $config->app_key)->first();
+                if (!$cekConfig) {
+                    $configTujuan = TujuanConfig::create($config->toArray());
+                    $setConfigId = $configTujuan->id;
                 } else {
-                    $this->info('app key ditemukan');
-                    $setConfigId = $cek->id;
+                    $setConfigId = $cekConfig->id;
                 }
             }
 
+            // 2. Sinkronisasi Setting Modul
+            $this->info('Sinkronisasi tabel setting_modul...');
             TujuanSettingModul::where('config_id', $setConfigId)->delete();
-            // $asal = AsalGrupAkse::get();
-            // $this->info('line 56');
-            // foreach ($asal as $item) {
-            //     $asalnya = Arr::except($item->toArray(), ['id']);
-            //     $asalnya['config_id'] = $setConfigId;
-            //     $hasil = TujuanGrupAkse::create($asalnya);
-            //     $b = AsalGrupAkse::where('id_grup', $item->id)->update(['id_grup' => $hasil->id]);
-            //     $this->info('line 62');
-            // }
-
-            $modul = AsalSettingModul::get();
-
-            // $b = [];
-            foreach ($modul as $a) {
-                // echo $a->modul;
-                if ($a->modul ?? '') {
-                    $asalnyamodul = Arr::except($a->toArray(), ['id']);
-                    // print_r($asalnyamodul);
-                    $asalnyamodul['config_id'] = $setConfigId;
-                    $asalnyamodul['old_value'] = $a->id;
-                    $hasilmodul = TujuanSettingModul::create($asalnyamodul);
-
-                    // array_push($b, ['asli' => $a->id, 'hasil' => $hasilmodul->id]);
-                    // AsalGrupAkse::where('id_modul', $a->id)->update(['id_modul' => $a->id]);
-                    // $this->info('line 73');
-                }
+            $modulAsal = AsalSettingModul::all();
+            foreach ($modulAsal as $modul) {
+                $dataModul = Arr::except($modul->toArray(), ['id']);
+                $dataModul['config_id'] = $setConfigId;
+                $dataModul['old_value'] = $modul->id;
+                $modulTujuan = TujuanSettingModul::create($dataModul);
+                $idMappingModul[$modul->id] = $modulTujuan->id;
             }
-            // $nm = AsalSettingModul::get();
-            // foreach ($nm  as $as) {
-            //     $asalnyamodul = Arr::except($as->toArray(), ['id']);
-            //     // $asalnyamodul['config_id'] = $setConfigId;
-            //     $asalnyamodul['old_value'] = $as->id;
-            //     $a = TujuanSettingModul::create($asalnyamodul);
-            // }
-            // $nm = AsalSettingModul::get();
-            // foreach ($nm  as $as) {
-            //     $asalnyamodul = Arr::except($as->toArray(), ['id']);
-            //     // $asalnyamodul['config_id'] = $setConfigId;
-            //     if ($as->parent != 0) {
-            //         $a = TujuanSettingModul::where('old_value', $as->parent)->first();
-            //         TujuanSettingModul::where('parent', $as->parent)->update(['parent' => $a->id]);
-            //         $this->info('line 89');
-            //     }
-            // }
 
-            $asu = AsalUserGrup::get();
-
-            foreach ($asu as $asuu) {
-                // echo $asuu->nama;
-                // echo $setConfigId;
-                $ajk =  TujuanUserGrup::where('config_id', $setConfigId)->where('nama', $asuu->nama)->first();
-                $this->info("line 105");
-                if (!$ajk) {
-                    $this->info("line 111");
-                    $asalnyamodul = Arr::except($asuu->toArray(), ['id', 'slug']);
-                    $asalnyamodul['config_id'] = $setConfigId;
-
-                    TujuanUserGrup::create($asalnyamodul);
+            // Perbarui Parent pada Setting Modul
+            $this->info('Perbarui parent pada setting_modul...');
+            foreach ($modulAsal as $modul) {
+                if ($modul->parent) {
+                    $parentTujuanId = $idMappingModul[$modul->parent] ?? null;
+                    if ($parentTujuanId) {
+                        TujuanSettingModul::where('old_value', $modul->id)->update(['parent' => $parentTujuanId]);
+                    }
                 }
             }
 
+            // 3. Sinkronisasi User Grup
+            $this->info('Sinkronisasi tabel user_grup...');
+            $userGrupAsal = AsalUserGrup::all();
+            foreach ($userGrupAsal as $userGrup) {
+                $cekUserGrup = TujuanUserGrup::where('config_id', $setConfigId)
+                    ->where('nama', $userGrup->nama)
+                    ->first();
 
-            $AsalGrupAkse = AsalGrupAkse::get();
-            foreach ($AsalGrupAkse as $bm) {
-                // echo "a" . $bm->id_modul;
-                $asalnyamodul = Arr::except($bm->toArray(), ['id']);
-                $asalusergrup = AsalUserGrup::where('id', $bm->id_grup)->first();
-                // print_r($asalusergrup->nama ?? 'asu');
-                $idgroup = TujuanUserGrup::where('config_id', $setConfigId)->where('nama', $asalusergrup->nama)->first();
-
-                $tujuanidmodul = TujuanSettingModul::where('old_value', $bm->id_modul)->first();
-                // dd($tujuanidmodul->id);
-
-                TujuanGrupAkse::create([
-                    'config_id' => $setConfigId,
-                    'id_grup' =>  $idgroup->id,
-                    'id_modul' => $tujuanidmodul->id,
-                    'akses' => $bm->akses
-                ]);
+                if (!$cekUserGrup) {
+                    $dataUserGrup = Arr::except($userGrup->toArray(), ['id']);
+                    $dataUserGrup['config_id'] = $setConfigId;
+                    $userGrupTujuan = TujuanUserGrup::create($dataUserGrup);
+                    $idMappingUserGrup[$userGrup->id] = $userGrupTujuan->id;
+                } else {
+                    $idMappingUserGrup[$userGrup->id] = $cekUserGrup->id;
+                }
             }
+
+            // 4. Sinkronisasi Grup Akses
+            $this->info('Sinkronisasi tabel grup_akses...');
+            $grupAksesAsal = AsalGrupAkse::all();
+            foreach ($grupAksesAsal as $grupAkses) {
+                $idGrupTujuan = $idMappingUserGrup[$grupAkses->id_grup] ?? null;
+                $idModulTujuan = $idMappingModul[$grupAkses->id_modul] ?? null;
+
+                if ($idGrupTujuan && $idModulTujuan) {
+                    TujuanGrupAkse::create([
+                        'config_id' => $setConfigId,
+                        'id_grup' => $idGrupTujuan,
+                        'id_modul' => $idModulTujuan,
+                        'akses' => $grupAkses->akses,
+                    ]);
+                }
+            }
+
+            $this->info('Sinkronisasi selesai.');
         });
     }
 }

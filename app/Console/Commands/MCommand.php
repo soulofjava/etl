@@ -60,10 +60,26 @@ class MCommand extends Command
 
         $this->info('pindah table menu');
         TujuanMenu::where('config_id', $setConfigId)->delete();
-        $a = Menu::all();
-        foreach ($a as $item) {
+        $idMapping = [];
+
+        // Ambil semua data dari tabel menu di database asal
+        $menus = Menu::all();
+
+        // Proses setiap item menu
+        foreach ($menus as $item) {
+            // Ubah config_id sesuai parameter
             $item->config_id = $setConfigId;
-            TujuanMenu::create($item->toArray());
+
+            // Simpan data ke database tujuan
+            $newMenu = TujuanMenu::create($item->toArray());
+
+            // Simpan mapping ID lama ke ID baru
+            $idMapping[$item->id] = $newMenu->id;
+        }
+
+        // Update parent di database tujuan
+        foreach ($idMapping as $oldId => $newId) {
+            TujuanMenu::where('parrent', $oldId)->update(['parrent' => $newId]);
         }
     }
 }
